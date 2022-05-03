@@ -4,8 +4,10 @@ body
 }
 .NavBar
 {
-    background-color: whitesmoke;
+    background-color: rgba(245, 245, 245, 0.872);
     font-family: sans-serif;
-    font-size: 300%;
-    padding-bottom: 10%;
+    padding-top: calc(5vw);
+    padding-bottom: calc(5vw);
+    font-size: calc(5vw);
+    text-align: center;
 }
