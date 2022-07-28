@@ -1,6 +1,68 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <title>Contact Me</title>
+        <meta name="author" content="Xevenst">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Xevenst's Website">
+        <!-- Linking Html and Javascript -->
+        <link rel="stylesheet" href="Assets/Bootstrap/css/bootstrap.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <link rel="stylesheet" href="/CSS/MainPage.css">
+        <link rel="stylesheet" href="/CSS/Contact.css">
+    </head>
     <body>
-       <h1>Contact Me</h1> 
+        <script src="/Assets/Bootstrap/js/bootstrap.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        <script src="/Javascript/Contact.js"></script>
+        <!--NavBar-->
+        <section class="home">
+            <nav class="nav">
+                <div class="container">
+                    <div class="logo">
+                        <a href="#">Your Logo</a>
+                    </div>
+                    <div id="mainListDiv" class="main_list">
+                        <ul class="navlinks">
+                            <li><a href="#">About</a></li>
+                            <li><a href="#">Portfolio</a></li>
+                            <li><a href="#">Services</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                    <span class="navTrigger">
+                        <i></i>
+                        <i></i>
+                        <i></i>
+                    </span>
+                </div>
+            </nav>
+        </section>
+        <!-- End of Navbar -->
+
+        <!-- Start of contents -->
+        <div style="height: 1000px"><br><br>
+            <!-- just to make scrolling effect possible -->
+            <h2 class="myH2">Welcome to my website!</h2>
+            <img src="/Assets/Images/Author.png" class="img-fluid animated fadeInRight" style="position: center;">
+        </div>
+    
+    <!-- Jquery needed -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="js/scripts.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+    <!-- Function used to shrink nav bar removing paddings and adding black background -->
+        <script>
+            $(window).scroll(function() {
+                if ($(document).scrollTop() > 50) {
+                    $('.nav').addClass('affix');
+                    console.log("OK");
+                } else {
+                    $('.nav').removeClass('affix');
+                }
+            });
+        </script>
+        <!--EndOfNavBar-->
     </body>
 </html>
