@@ -8,6 +8,13 @@ body {
     font-size: 62.5%;
     font-size: 10px;
 }
+
+.bodycontents{
+    width: 100%;
+    max-width:640px;
+    margin:auto;
+    background-image:black;
+}
 /*-- Inspiration taken from abdo steif -->
 /* --> https://codepen.io/abdosteif/pen/bRoyMb?editors=1100*/
 
