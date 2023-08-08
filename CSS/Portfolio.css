@@ -1,0 +1,44 @@
+.content {
+    background-color: #f0f0f0;
+    padding-top: 10rem;
+}
+
+.inactiveLink {
+    pointer-events: all;
+    cursor: not-allowed;
+    color: green;
+}
+
+.resume {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.resume-item {
+    text-align: center;
+    margin: 0 20px;
+}
+
+.resume-image-horizontal {
+    width: 325px;
+    height: 430px;
+}
+
+.resume-image-vertical {
+    width: 450px;
+    height: 275px;
+}
+
+.resume-title {
+    margin-top: 10px;
+    font-size: 18px;
+    text-align: center;
+}
+
+.resume-divider {
+    width: 50px;
+    border: 1px solid #ccc;
+    margin: 10px auto;
+}
