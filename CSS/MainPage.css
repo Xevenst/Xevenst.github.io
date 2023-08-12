@@ -93,7 +93,7 @@ body {
 .hometext {
     text-align:center;
     position: auto;
-    padding:40vh;
+    padding: 40vh;
     color: #000;
     font-size: 7rem;
 }
@@ -391,7 +391,11 @@ body {
 
 .affix {
     padding: 0;
-    background-color: #111;
+    background-color: black; /* Set the desired background color */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 
 .myH2 {

@@ -5,3 +5,42 @@
     line-height: 65px;
     font-size: 2.4rem;
 }
+
+.inactiveLink {
+    pointer-events: all;
+    cursor: not-allowed;
+    color: green;
+}
+
+.content {
+    background-color: #f0f0f0;
+    padding: 10rem 0 10rem 0;
+    min-height: 90vh;
+}
+
+.header1{
+    font-size: 4rem;
+    align-items: center;
+    text-align: center;
+}
+
+.header2{
+    font-size: 3rem;
+    align-items: center;
+    padding: 0.5rem 0 0.5rem 2rem;
+    text-align: left;
+}
+
+.hrsubdivider{
+    padding: 0 2rem 0 2rem;
+}
+
+.section{
+    padding: 1rem 15rem 1rem 15rem;
+}
+
+.paragraph{
+    font-size: 1.8rem;
+    text-align: justify;
+    padding: 0 2rem 0 2rem;
+}

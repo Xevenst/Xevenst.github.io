@@ -3,6 +3,5 @@ $('.navTrigger').click(function () {
     console.log("Clicked menu");
     $("#mainListDiv").toggleClass("show_list");
     $("#mainListDiv").fadeIn();
-
 });
 $
