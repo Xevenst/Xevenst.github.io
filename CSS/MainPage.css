@@ -12,9 +12,15 @@ body {
 
 .bodycontents {
     width: 100%;
-    max-width: 640px;
+    /* max-width: 640px; */
     margin: auto;
     background-image: black;
+}
+
+.inactiveLink {
+    pointer-events: all;
+    cursor: not-allowed;
+    color: green;
 }
 
 /*-- Inspiration taken from abdo steif -->
@@ -90,12 +96,16 @@ body {
     background-size: cover;
 }
 
+/* Update the .hometext class */
 .hometext {
-    text-align:center;
-    position: auto;
-    padding: 40vh;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
     color: #000;
-    font-size: 7rem;
+    font-size: 10rem;
 }
 
 .homev2 {
@@ -168,7 +178,7 @@ body {
         text-align: center;
         width: 100%;
         font-size: 3rem;
-        padding: 20px;
+        padding: 20px 20px 0px 20px;
     }
 
     .nav div.media_button {
@@ -414,4 +424,24 @@ body {
     .myP {
         padding: 2%;
     }
+}
+
+.header1{
+    font-size: 8rem;
+    align-items: center;
+    text-align: center;
+}
+
+.p{
+    font-size: 3rem;
+    text-align: center;
+    align-items: center;
+}
+
+.footertext {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 1.8rem;
 }
