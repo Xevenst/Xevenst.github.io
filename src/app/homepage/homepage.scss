@@ -1,0 +1,31 @@
+.homepage {
+    padding: 2rem;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: calc(100vh - 80px);
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--accent-color);
+    }
+
+    p {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+    }
+
+    button {
+        background-color: var(--accent-color);
+        color: var(--bg-primary);
+        padding: 0.75rem 2rem;
+        border: none;
+        border-radius: 4px;
+        font-weight: 600;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}

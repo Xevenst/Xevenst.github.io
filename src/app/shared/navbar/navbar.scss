@@ -1,0 +1,122 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+
+    .navbar-brand {
+        .brand-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+
+            &:hover {
+                color: #00d4ff;
+                text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+            }
+        }
+    }
+
+    .navbar-menu {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        gap: 3rem;
+        align-items: center;
+
+        li {
+            a {
+                color: #e0e0e0;
+                text-decoration: none;
+                font-size: 1.1rem;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                padding: 0.5rem 1rem;
+                border-bottom: 3px solid transparent;
+
+                &:hover {
+                    color: #00d4ff;
+                }
+
+                &.active {
+                    color: #00d4ff;
+                    border-bottom-color: #00d4ff;
+                    box-shadow: 0 2px 8px rgba(0, 212, 255, 0.3);
+                }
+            }
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: 2px solid #00d4ff;
+            color: #00d4ff;
+            font-size: 1.3rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+
+            &:hover {
+                background-color: #00d4ff;
+                color: #1e3c72;
+                transform: rotate(20deg);
+            }
+        }
+    }
+}
+
+/* Light theme */
+[data-theme="light"] .navbar {
+    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+
+    .navbar-brand .brand-link {
+        color: #1e3c72;
+
+        &:hover {
+            color: #00a8e8;
+            text-shadow: 0 0 10px rgba(0, 168, 232, 0.5);
+        }
+    }
+
+    .navbar-menu li a {
+        color: #333;
+
+        &:hover {
+            color: #00a8e8;
+        }
+
+        &.active {
+            color: #00a8e8;
+            border-bottom-color: #00a8e8;
+            box-shadow: 0 2px 8px rgba(0, 168, 232, 0.3);
+        }
+    }
+
+    .theme-toggle {
+        border-color: #00a8e8;
+        color: #00a8e8;
+
+        &:hover {
+            background-color: #00a8e8;
+            color: #f5f5f5;
+        }
+    }
+}

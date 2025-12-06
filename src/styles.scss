@@ -1,1 +1,72 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Dark theme (default) */
+:root {
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --text-primary: #ffffff;
+    --text-secondary: #e0e0e0;
+    --accent-color: #00d4ff;
+    --border-color: #333333;
+}
+
+[data-theme="dark"] {
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --text-primary: #ffffff;
+    --text-secondary: #e0e0e0;
+    --accent-color: #00d4ff;
+    --border-color: #333333;
+}
+
+/* Light theme - Softer colors */
+[data-theme="light"] {
+    --bg-primary: #f8f9fa;
+    --bg-secondary: #f0f2f5;
+    --text-primary: #2c3e50;
+    --text-secondary: #555555;
+    --accent-color: #0084d6;
+    --border-color: #e8eaed;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+button {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: var(--accent-color);
+    color: var(--bg-primary);
+}
+
+/* Smooth transitions for all elements */
+* {
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+}

@@ -1,0 +1,13 @@
+<nav class="navbar">
+    <div class="navbar-brand">
+        <a routerLink="/homepage" class="brand-link">Xevenst</a>
+    </div>
+    <ul class="navbar-menu">
+        <li><a routerLink="/about" routerLinkActive="active">About</a></li>
+        <li><a routerLink="/portfolio" routerLinkActive="active">Portfolio</a></li>
+        <li><button class="theme-toggle" (click)="toggleTheme()"
+                [attr.aria-label]="'Switch to ' + (theme$ | async) + ' mode'">
+                {{ (theme$ | async) === 'dark' ? '☀️' : '🌙' }}
+            </button></li>
+    </ul>
+</nav>
