@@ -1,0 +1,63 @@
+.sidenav-trigger {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 100vh;
+    z-index: 99;
+    cursor: pointer;
+}
+
+.sidenav {
+    position: fixed;
+    left: -280px;
+    top: 0;
+    width: 280px;
+    height: 100vh;
+    background-color: var(--bg-secondary);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+    z-index: 98;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+    padding-top: 80px;
+
+    &.open {
+        left: 0;
+    }
+
+    .sidenav-menu {
+        list-style: none;
+        margin: 0;
+        padding: 2rem 0;
+
+        li {
+            a {
+                display: block;
+                padding: 1rem 2rem;
+                color: var(--text-primary);
+                text-decoration: none;
+                font-size: 1.1rem;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                border-left: 4px solid transparent;
+
+                &:hover {
+                    background-color: var(--bg-primary);
+                    border-left-color: var(--accent-color);
+                    padding-left: 2.5rem;
+                }
+
+                &.active {
+                    background-color: var(--bg-primary);
+                    color: var(--accent-color);
+                    border-left-color: var(--accent-color);
+                }
+            }
+        }
+    }
+}
+
+/* Light theme */
+[data-theme="light"] .sidenav {
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+}

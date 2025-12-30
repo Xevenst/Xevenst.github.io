@@ -1,0 +1,8 @@
+<div class="sidenav-trigger" #sidenavTrigger (mouseenter)="openSidenav()"></div>
+<nav #sidenavPanel class="sidenav" [class.open]="isOpen" (mouseenter)="openSidenav()" (mouseleave)="closeSidenav()">
+  <ul class="sidenav-menu">
+    <li><a routerLink="/homepage">Home</a></li>
+    <li><a routerLink="/about">About</a></li>
+    <li><a routerLink="/portfolio">Portfolio</a></li>
+  </ul>
+</nav>

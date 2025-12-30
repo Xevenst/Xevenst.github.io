@@ -1,31 +1,201 @@
-.homepage {
-    padding: 2rem;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    min-height: calc(100vh - 80px);
+ion-content {
+  --background: var(--bg-primary);
+}
 
-    h1 {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-        color: var(--accent-color);
+/* Container */
+.home-cover {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 2rem;
+  box-sizing: border-box;
+  color: var(--text-primary);
+  overflow: hidden;
+  min-height: 100vh;
+  /* Full viewport height */
+
+  background-color: var(--bg-primary);
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Image layer */
+.home-cover__media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+
+  /* driven by JS for parallax + scale */
+  transform: translateY(var(--hero-translate, 0px)) scale(var(--hero-scale, 1.03));
+  transform-origin: center top;
+  transition: transform 160ms linear;
+
+  animation: coverImageIn 1.1s ease-out forwards;
+}
+
+/* Image entrance animation */
+@keyframes coverImageIn {
+  from {
+    transform: translateX(6%) scale(1);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Overlay layer */
+.home-cover__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+
+  /* Base dim + gradient for left → right fade */
+  background-color: rgba(0, 0, 0, 0.45);
+  background-image: linear-gradient(to right,
+      rgba(0, 0, 0, 0.85) 40%,
+      rgba(0, 0, 0, 0.65) 70%,
+      rgba(0, 0, 0, 0.45) 80%,
+      rgba(0, 0, 0, 0.15) 90%,
+      rgba(0, 0, 0, 0) 100%);
+}
+
+/* Content layer */
+.home-cover__content {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  padding: 2rem;
+  margin-left: 1rem;
+
+  animation: coverContentIn 0.8s ease-out 0.4s both;
+
+  h1 {
+    font-size: clamp(1.6rem, 3.6vw, 2.8rem);
+    margin: 0 0 0.6rem 0;
+    color: var(--accent-color);
+  }
+
+  p {
+    color: var(--text-secondary);
+    margin: 0 0 1.2rem 0;
+    font-size: 1.1rem;
+  }
+
+  ion-button {
+    --padding-start: 1.2rem;
+    --padding-end: 1.2rem;
+    --border-radius: 6px;
+    font-weight: 600;
+    transition: opacity 0.25s ease, transform 0.15s ease;
+
+    &:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
     }
+  }
+}
 
-    p {
-        font-size: 1.1rem;
-        color: var(--text-secondary);
-        margin-bottom: 2rem;
-    }
+/* Content entrance animation */
+@keyframes coverContentIn {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
 
-    button {
-        background-color: var(--accent-color);
-        color: var(--bg-primary);
-        padding: 0.75rem 2rem;
-        border: none;
-        border-radius: 4px;
-        font-weight: 600;
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 
-        &:hover {
-            opacity: 0.8;
-        }
-    }
+/* New section below hero */
+.home-section {
+  min-height: 720px;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 2rem;
+  box-sizing: border-box;
+  color: var(--text-primary);
+  overflow: hidden;
+  background-color: var(--bg-primary);
+}
+
+.home-section__media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.home-section__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-color: rgba(0, 0, 0, 0.45);
+  background-image: linear-gradient(to right,
+      rgba(0, 0, 0, 0.85) 0%,
+      rgba(0, 0, 0, 0.65) 30%,
+      rgba(0, 0, 0, 0.35) 55%,
+      rgba(0, 0, 0, 0.15) 75%,
+      rgba(0, 0, 0, 0) 100%);
+}
+
+.home-section__content {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  padding: 2rem;
+  margin-left: 1rem;
+
+  h2 {
+    font-size: clamp(1.6rem, 3.6vw, 2.8rem);
+    margin: 0 0 0.6rem 0;
+    color: var(--accent-color);
+  }
+
+  p {
+    color: var(--text-secondary);
+    margin: 0;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .home-cover {
+    padding: 1.2rem;
+  }
+
+  .home-cover__overlay {
+    background-image: linear-gradient(to right,
+        rgba(0, 0, 0, 0.9) 0%,
+        rgba(0, 0, 0, 0.7) 40%,
+        rgba(0, 0, 0, 0.35) 70%,
+        rgba(0, 0, 0, 0) 100%);
+  }
+
+  .home-cover__content {
+    margin-left: 0.6rem;
+    padding: 1rem;
+  }
+
+  .home-section {
+    padding: 1.2rem;
+  }
+
+  .home-section__content {
+    margin-left: 0.6rem;
+    padding: 1rem;
+  }
 }

@@ -17,14 +17,15 @@
         .brand-link {
             color: #ffffff;
             text-decoration: none;
-            font-size: 1.8rem;
+            font-size: 2.2rem;  // Made bigger
             font-weight: 800;
-            letter-spacing: 1px;
+            letter-spacing: 2px;  // More letter spacing
             transition: all 0.3s ease;
 
             &:hover {
                 color: #00d4ff;
                 text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+                transform: scale(1.05);  // Slight scale on hover
             }
         }
     }
