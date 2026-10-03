@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-primary: #071019;
+  --surface: #0c1722;
+  --surface-elevated: #101e2b;
+  --text-primary: #eef5f7;
+  --text-muted: #8d9ca6;
+  --accent-color: #63e6db;
+  --accent-warm: #ffbd73;
+  --border-color: rgba(174, 213, 224, .16);
+  --font-body: 'DM Sans', sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+[data-theme='light'] {
+  --bg-primary: #eef3f3;
+  --surface: #e3ebec;
+  --surface-elevated: #f8fbfb;
+  --text-primary: #12202a;
+  --text-muted: #5e6c72;
+  --accent-color: #007d85;
+  --accent-warm: #b66b1e;
+  --border-color: rgba(18, 32, 42, .16);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { min-width: 320px; margin: 0; background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-body); transition: background-color .25s ease, color .25s ease; }
+body::before { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 85% 5%, rgba(70, 189, 201, .08), transparent 32rem); content: ''; pointer-events: none; }
+a { color: inherit; text-decoration: none; transition: color .2s ease, border-color .2s ease, background-color .2s ease; }
+button, input, textarea { font: inherit; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; }
+.page-shell { width: min(1240px, calc(100% - clamp(2.5rem, 8vw, 8rem))); margin-inline: auto; }
+.eyebrow { display: flex; align-items: center; gap: .65rem; margin: 0 0 1.4rem; color: var(--accent-color); font: .68rem var(--font-mono); letter-spacing: .15em; text-transform: uppercase; }
+.eyebrow-line { width: 2rem; height: 1px; background: currentColor; }
+em { font-family: var(--font-serif); font-weight: 400; }
+
+@media (max-width: 600px) { .page-shell { width: calc(100% - 2.5rem); } }

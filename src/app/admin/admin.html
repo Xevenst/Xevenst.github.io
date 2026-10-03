@@ -1,0 +1,21 @@
+<div class="admin-page page-shell">
+  <header><p class="eyebrow"><span class="eyebrow-line"></span> Restricted area</p><h1>Content<br /><em>control room.</em></h1><p>Manage portfolio data, upload files to Firebase Storage, and keep private diary entries in Firebase. This page is hidden from non-administrators and protected by Firestore and Storage rules.</p></header>
+  <p *ngIf="message" class="admin-message">{{ message }}</p><p *ngIf="error" class="admin-error">{{ error }}</p>
+  <section class="admin-layout">
+    <div class="management-panel"><div class="panel-heading"><h2>Projects</h2><span>{{ projects.length }} records</span></div><div class="managed-item" *ngFor="let project of projects"><div><strong>{{ project.title }}</strong><span>{{ project.year }} · {{ project.type }}</span></div><div><button type="button" (click)="edit(project)">Edit</button><button type="button" class="danger" (click)="remove(project)">Remove</button></div></div></div>
+    <div class="editor-panel" *ngIf="selected as project"><div class="panel-heading"><h2>Edit project</h2><button type="button" (click)="selected = null">Close</button></div><label>Title<input [(ngModel)]="project.title" /></label><label>Summary<textarea [(ngModel)]="project.summary" rows="3"></textarea></label><label>GitHub URL<input [(ngModel)]="project.githubUrl" /></label><button type="button" class="save-button" (click)="save()">Save to Firebase ↗</button></div>
+  </section>
+  <section class="admin-section">
+    <div class="panel-heading"><h2>Files</h2><span>Firebase Storage</span></div>
+    <label class="upload-control">Upload PDF, image, or audio file<input type="file" accept=".pdf,image/*,audio/*" (change)="upload($event)" [disabled]="uploading" /></label>
+    <p class="admin-muted" *ngIf="uploading">Uploading file…</p>
+    <div class="managed-item" *ngFor="let file of files"><div><strong>{{ file.name }}</strong><span>{{ file.contentType }} · {{ file.size | number }} bytes</span></div><div><a [href]="file.downloadUrl" target="_blank" rel="noreferrer">Open</a><button type="button" class="danger" (click)="removeFile(file)">Remove</button></div></div>
+    <p class="admin-muted" *ngIf="files.length === 0 && !uploading">No Firebase Storage files uploaded yet.</p>
+  </section>
+  <section class="admin-section">
+    <div class="panel-heading"><h2>Private diary</h2><button type="button" (click)="newDiary()">New entry</button></div>
+    <div class="managed-item" *ngFor="let entry of diaryEntries"><div><strong>{{ entry.title || 'Untitled entry' }}</strong><span>Updated {{ entry.updatedAt | date:'medium' }}</span></div><div><button type="button" (click)="editDiary(entry)">Edit</button><button type="button" class="danger" (click)="removeDiary(entry)">Remove</button></div></div>
+    <p class="admin-muted" *ngIf="diaryEntries.length === 0">No private diary entries yet.</p>
+    <div class="editor-panel" *ngIf="selectedDiary as entry"><div class="panel-heading"><h2>Edit diary entry</h2><button type="button" (click)="selectedDiary = null">Close</button></div><label>Title<input [(ngModel)]="entry.title" /></label><label>Entry<textarea [(ngModel)]="entry.body" rows="10"></textarea></label><button type="button" class="save-button" (click)="saveDiary()">Save private entry ↗</button></div>
+  </section>
+</div>

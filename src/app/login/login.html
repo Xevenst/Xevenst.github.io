@@ -1,0 +1,21 @@
+<div class="auth-page page-shell">
+  <section class="auth-panel">
+    <div class="auth-copy"><p class="eyebrow"><span class="eyebrow-line"></span> Private corner</p><h1>Keep the good<br /><em>ideas close.</em></h1><p>Sign in to bookmark work and access the personal workspace. Authentication is optional; the public portfolio always stays open.</p></div>
+    <div class="auth-form-wrap">
+      <ng-container *ngIf="configState$ | async as config">
+        <div class="config-note" *ngIf="config !== 'configured'"><strong>Sign-in unavailable</strong><span>Authentication is not enabled for this deployment.</span></div>
+      </ng-container>
+      <div class="mode-switch"><button type="button" [class.active]="mode === 'sign-in'" (click)="mode = 'sign-in'">Sign in</button><button type="button" [class.active]="mode === 'create'" (click)="mode = 'create'">Create account</button></div>
+      <form [formGroup]="mode === 'sign-in' ? signInForm : createForm" (ngSubmit)="submit()">
+        <label>Email<input type="email" formControlName="email" autocomplete="email" placeholder="you@example.com" /></label>
+        <label>Password<input type="password" formControlName="password" autocomplete="current-password" placeholder="At least 6 characters" /></label>
+        <p class="field-error" *ngIf="(mode === 'sign-in' ? signInForm : createForm).controls.email.touched && (mode === 'sign-in' ? signInForm : createForm).controls.email.invalid">Enter a valid email.</p>
+        <button class="submit-button" type="submit" [disabled]="busy">{{ busy ? 'Working…' : mode === 'sign-in' ? 'Sign in' : 'Create account' }} <span>↗</span></button>
+      </form>
+      <div class="or"><span>or</span></div>
+      <button type="button" class="google-button" (click)="googleSignIn()" [disabled]="busy">Continue with Google <span>G</span></button>
+      <p class="auth-error" *ngIf="localError || (error$ | async) as error">{{ localError || error }}</p>
+      <a class="back-link" routerLink="/portfolio">← Back to public portfolio</a>
+    </div>
+  </section>
+</div>

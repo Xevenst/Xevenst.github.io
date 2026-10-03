@@ -1,0 +1,11 @@
+<div class="account-page page-shell">
+  <header class="account-header"><div><p class="eyebrow"><span class="eyebrow-line"></span> Your workspace</p><h1>Saved<br /><em>work.</em></h1></div><button type="button" class="signout" (click)="signOut()">Sign out ↗</button></header>
+  <ng-container *ngIf="user$ | async as user">
+    <section class="profile-card"><div class="profile-avatar">{{ (user.displayName || user.email || 'X').charAt(0).toUpperCase() }}</div><div><p class="card-kicker">Signed in as</p><h2>{{ user.displayName || 'Xevenst member' }}</h2><p>{{ user.email }}</p></div><span class="member-badge">Member</span></section>
+  </ng-container>
+  <section class="saved-section"><div class="saved-heading"><div><p class="eyebrow">Bookmarks</p><h2>Things worth<br /><em>returning to.</em></h2></div><a routerLink="/portfolio">Browse portfolio ↗</a></div>
+    <p *ngIf="loading" class="account-muted">Loading saved projects…</p><p *ngIf="error" class="account-error">{{ error }}</p>
+    <div *ngIf="!loading && !error && savedProjects.length === 0" class="empty-state"><strong>No saved projects yet.</strong><span>Use the star on any portfolio card to keep it here.</span><a routerLink="/portfolio">Explore the work →</a></div>
+    <div class="saved-grid"><a class="saved-card" *ngFor="let project of savedProjects" routerLink="/portfolio"><span>{{ project.year }} / {{ project.type }}</span><h3>{{ project.title }}</h3><b>View project ↗</b></a></div>
+  </section>
+</div>

@@ -1,0 +1,20 @@
+<nav class="navbar" aria-label="Primary navigation">
+    <a routerLink="/homepage" class="brand-link" aria-label="Xevenst home">
+      <span class="brand-mark">X</span>
+      <span>Xevenst<span class="brand-dot">.</span></span>
+    </a>
+    <div class="navbar-menu">
+      <a routerLink="/about" routerLinkActive="active">About</a>
+      <a routerLink="/portfolio" routerLinkActive="active">Portfolio</a>
+      <a *ngIf="user$ | async as user" routerLink="/account" routerLinkActive="active" class="account-link">
+        {{ user.displayName || user.email || 'Account' }}
+      </a>
+      <a *ngIf="!(user$ | async)" routerLink="/login" routerLinkActive="active">Sign in</a>
+      <a *ngIf="isAdmin$ | async" routerLink="/admin" routerLinkActive="active" class="admin-link">Admin</a>
+      <button type="button" class="theme-toggle" (click)="toggleTheme()"
+        [attr.aria-label]="(theme$ | async) === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'">
+        <span aria-hidden="true">{{ (theme$ | async) === 'dark' ? '☼' : '◐' }}</span>
+      </button>
+    </div>
+</nav>
+<app-sidenav></app-sidenav>

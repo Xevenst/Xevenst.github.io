@@ -1,0 +1,20 @@
+<div class="portfolio page-shell">
+  <header class="portfolio-header">
+    <div><p class="eyebrow"><span class="eyebrow-line"></span> Selected work / 2022—2023</p><h1>Small projects.<br /><em>Real questions.</em></h1></div>
+    <p class="portfolio-intro">A collection of experiments, assignments, and products exploring how software can make everyday tasks more understandable.</p>
+  </header>
+  <div class="portfolio-status"><span><i></i> {{ projects.length }} projects</span><span>Data: {{ dataSource }}</span><a *ngIf="!(user$ | async)" routerLink="/login">Sign in to save work →</a><a *ngIf="user$ | async" routerLink="/account">View saved work →</a></div>
+  <p *ngIf="loading" class="notice">Loading portfolio data…</p>
+  <p *ngIf="dataError" class="notice notice-error">{{ dataError }}</p>
+  <div class="portfolio-grid">
+    <article class="portfolio-card" *ngFor="let project of projects; let index = index" [style.--project-accent]="project.accent">
+      <div class="portfolio-card-top"><span>0{{ index + 1 }} / {{ project.year }}</span><button type="button" (click)="toggleBookmark(project)" [attr.aria-label]="isSaved(project.id) ? 'Remove bookmark' : 'Save project'" [class.saved]="isSaved(project.id)">{{ isSaved(project.id) ? '★' : '☆' }}</button></div>
+      <div class="portfolio-art"><span>{{ project.title.split(' ')[0] }}</span><b>{{ project.year }}</b></div>
+      <p class="card-kicker">{{ project.type }}</p><h2>{{ project.title }}</h2><p>{{ project.summary }}</p>
+      <p class="details">{{ project.details }}</p>
+      <div class="technology-list"><span *ngFor="let technology of project.technologies">{{ technology }}</span></div>
+      <a class="github-link" [href]="project.githubUrl" target="_blank" rel="noreferrer">Open on GitHub <span>↗</span></a>
+    </article>
+  </div>
+  <section class="portfolio-note"><p class="eyebrow">A note on assets</p><p>No resume or portfolio download links are shown until their files are available in the public assets directory. The projects above link directly to their public GitHub repositories.</p></section>
+</div>

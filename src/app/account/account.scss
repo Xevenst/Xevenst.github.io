@@ -1,0 +1,26 @@
+.account-page { padding-top: clamp(4rem, 9vw, 8rem); padding-bottom: 8rem; }
+.account-header, .saved-heading { display: flex; align-items: end; justify-content: space-between; gap: 2rem; }
+.account-header { margin-bottom: 4rem; }
+.account-header h1 { margin: 0; font-size: clamp(3.5rem, 8vw, 8rem); letter-spacing: -.09em; line-height: .86; }
+.signout, .saved-heading a { border: 1px solid var(--border-color); background: transparent; color: var(--text-muted); cursor: pointer; font: .7rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+.signout { padding: .8rem 1rem; }
+.signout:hover, .saved-heading a:hover { border-color: var(--accent-color); color: var(--accent-color); }
+.saved-heading a { border: 0; color: var(--accent-color); }
+.profile-card { display: flex; align-items: center; gap: 1.2rem; padding: 1.2rem; border: 1px solid var(--border-color); background: var(--surface); }
+.profile-avatar { display: grid; width: 3rem; height: 3rem; place-items: center; border-radius: 50%; background: var(--accent-color); color: #04141d; font: 800 1.3rem var(--font-display); }
+.profile-card h2 { margin: 0; font-size: 1.25rem; letter-spacing: -.03em; }
+.profile-card p { margin: .25rem 0 0; color: var(--text-muted); font-size: .85rem; }
+.member-badge { margin-left: auto; color: var(--accent-color); font: .65rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+.card-kicker, .eyebrow { color: var(--accent-color); font: .68rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+.saved-section { margin-top: 7rem; }
+.saved-heading { margin-bottom: 2.5rem; }
+.saved-heading h2 { margin: 0; font-size: clamp(2.4rem, 5vw, 5rem); }
+.empty-state { display: grid; gap: .7rem; padding: 4rem 1.5rem; border: 1px dashed var(--border-color); color: var(--text-muted); }
+.empty-state strong { color: var(--text-primary); font-size: 1.2rem; }
+.empty-state a { color: var(--accent-color); font-size: .8rem; font-weight: 700; }
+.saved-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.saved-card { display: grid; min-height: 170px; align-content: space-between; padding: 1.2rem; border: 1px solid var(--border-color); color: var(--text-primary); }
+.saved-card > span, .saved-card b { color: var(--accent-color); font: .65rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+.saved-card h3 { margin: 1rem 0; font-size: 1.5rem; }
+.account-muted { color: var(--text-muted); }.account-error { color: var(--accent-warm); }
+@media (max-width: 650px) { .account-header, .saved-heading { align-items: start; flex-direction: column; } .saved-grid { grid-template-columns: 1fr; } .member-badge { align-self: start; } }

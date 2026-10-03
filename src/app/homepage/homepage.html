@@ -1,0 +1,66 @@
+<div class="home-page">
+  <section class="home-hero page-shell">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="eyebrow-line"></span> Steven Jonathan / Xevenst</p>
+      <h1>Building calm, useful <em>digital experiences.</em></h1>
+      <p class="hero-intro">Software Development Engineer in Taoyuan, Taiwan. I turn thoughtful ideas into interfaces, APIs, and products that feel clear to use.</p>
+      <div class="hero-actions">
+        <a class="button button-primary" routerLink="/portfolio">Explore the work <span>↗</span></a>
+        <a class="text-link" routerLink="/about">More about me <span>→</span></a>
+      </div>
+      <div class="hero-meta">
+        <span><i></i> Available for thoughtful collaborations</span>
+        <span class="hero-location">Taoyuan, Taiwan · 24°59′N</span>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="/images/homepage/homepageone.jpg" alt="Abstract blue landscape from the Xevenst homepage" />
+      <div class="image-caption"><span>01 / 03</span><span>Signal &amp; form</span></div>
+    </div>
+    <div class="hero-watermark" aria-hidden="true">XEVENST</div>
+  </section>
+
+  <section class="stats-strip page-shell" aria-label="Highlights">
+    <div class="stat" *ngFor="let stat of stats">
+      <strong>{{ stat.value }}</strong><span>{{ stat.label }}</span>
+    </div>
+    <p class="stats-note">A small portfolio of work shaped by curiosity, collaboration, and the details between the lines.</p>
+  </section>
+
+  <section class="home-section page-shell">
+    <div class="section-heading">
+      <p class="eyebrow">Selected work</p>
+      <h2>Ideas made <em>tangible.</em></h2>
+      <a class="text-link" routerLink="/portfolio">View all projects <span>↗</span></a>
+    </div>
+    <div class="project-grid">
+      <a class="project-card" *ngFor="let project of featuredProjects; let index = index" routerLink="/portfolio">
+        <div class="project-number">0{{ index + 1 }}</div>
+        <div class="project-art" [style.--project-accent]="project.accent">
+          <span class="art-word">{{ project.title.split(' ')[0] }}</span>
+          <span class="art-grid"></span>
+        </div>
+        <p class="card-kicker">{{ project.type }} · {{ project.year }}</p>
+        <h3>{{ project.title }}</h3>
+        <p>{{ project.summary }}</p>
+        <span class="card-arrow">↗</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="home-section split-section page-shell">
+    <div>
+      <p class="eyebrow">What I bring</p>
+      <h2>A practical mix of <em>craft &amp; systems.</em></h2>
+    </div>
+    <div class="skill-list">
+      <span>Flutter</span><span>Python</span><span>Angular</span><span>TypeScript</span><span>C++</span><span>Unity / C#</span><span>Git</span><span>Data science</span>
+    </div>
+  </section>
+
+  <section class="contact-banner page-shell">
+    <p class="eyebrow">Have a good problem?</p>
+    <h2>Let's make something<br /><em>worth remembering.</em></h2>
+    <a class="button button-primary" href="mailto:steven.jonathan.dev@gmail.com">Start a conversation <span>↗</span></a>
+  </section>
+</div>

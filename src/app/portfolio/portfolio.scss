@@ -1,0 +1,31 @@
+.portfolio { padding-top: clamp(4rem, 9vw, 8rem); padding-bottom: 7rem; }
+.portfolio-header { display: flex; align-items: end; justify-content: space-between; gap: 3rem; margin-bottom: 5rem; }
+.portfolio-header h1 { margin: 0; font-size: clamp(3rem, 7vw, 7rem); letter-spacing: -.08em; line-height: .92; }
+.portfolio-intro { max-width: 330px; margin: 0 0 .5rem; color: var(--text-muted); font-size: 1rem; line-height: 1.7; }
+.portfolio-status { display: flex; align-items: center; gap: 2rem; padding: 1rem 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); color: var(--text-muted); font: .68rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+.portfolio-status i { display: inline-block; width: 6px; height: 6px; margin-right: .5rem; border-radius: 50%; background: var(--accent-warm); }
+.portfolio-status a { margin-left: auto; color: var(--accent-color); }
+.notice { color: var(--text-muted); font-size: .9rem; }
+.notice-error { color: var(--accent-warm); }
+.portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem; }
+.portfolio-card { position: relative; padding: 1.2rem; border: 1px solid var(--border-color); transition: transform .25s ease, border-color .25s ease; }
+.portfolio-card:hover { transform: translateY(-5px); border-color: var(--project-accent); }
+.portfolio-card-top { display: flex; justify-content: space-between; color: var(--text-muted); font: .67rem var(--font-mono); }
+.portfolio-card-top button { border: 0; background: none; color: var(--text-muted); cursor: pointer; font-size: 1.4rem; line-height: 1; }
+.portfolio-card-top button.saved { color: var(--accent-warm); }
+.portfolio-art { position: relative; display: flex; align-items: center; justify-content: space-between; height: 230px; margin: 1.4rem 0 1.5rem; padding: 1.5rem; overflow: hidden; background: linear-gradient(140deg, var(--project-accent), #06131e 80%); }
+.portfolio-art::before { position: absolute; top: -25%; right: -20%; width: 80%; height: 140%; border: 1px solid rgba(255,255,255,.5); border-radius: 50%; content: ''; transform: rotate(25deg); }
+.portfolio-art span { position: relative; z-index: 1; color: rgba(255,255,255,.95); font: 800 clamp(2rem, 4vw, 3.6rem) var(--font-display); letter-spacing: -.1em; text-transform: uppercase; }
+.portfolio-art b { position: relative; z-index: 1; align-self: end; color: rgba(255,255,255,.75); font: .7rem var(--font-mono); }
+.card-kicker { margin: 0 0 .5rem; color: var(--accent-color); font: .68rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+.portfolio-card h2 { margin: 0 0 .8rem; font-size: 1.7rem; letter-spacing: -.04em; }
+.portfolio-card > p:not(.card-kicker):not(.details) { margin: 0; color: var(--text-muted); font-size: .92rem; line-height: 1.65; }
+.details { margin: 1.1rem 0; padding-top: 1rem; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: .83rem; line-height: 1.6; }
+.technology-list { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1.3rem 0 1.5rem; }
+.technology-list span { padding: .38rem .45rem; border: 1px solid var(--border-color); color: var(--text-muted); font: .62rem var(--font-mono); }
+.github-link { display: flex; justify-content: space-between; padding-top: 1rem; border-top: 1px solid var(--border-color); color: var(--text-primary); font-size: .76rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.github-link span { color: var(--accent-color); }
+.portfolio-note { max-width: 650px; margin-top: 6rem; padding: 1.5rem 0; border-top: 1px solid var(--border-color); }
+.portfolio-note p:last-child { margin: 0; color: var(--text-muted); line-height: 1.7; }
+@media (max-width: 850px) { .portfolio-header { align-items: start; flex-direction: column; } .portfolio-intro { max-width: 500px; } .portfolio-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 580px) { .portfolio-grid { grid-template-columns: 1fr; } .portfolio-status { align-items: flex-start; flex-wrap: wrap; gap: .7rem 1rem; } .portfolio-status a { flex-basis: 100%; margin-left: 0; } }

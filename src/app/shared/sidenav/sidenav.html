@@ -1,0 +1,19 @@
+<button class="sidenav-trigger" type="button" (click)="toggleSidenav()" [attr.aria-expanded]="isOpen"
+  aria-controls="side-navigation" aria-label="Toggle side navigation">
+  <span></span><span></span><span></span>
+</button>
+<div class="sidenav-scrim" [class.visible]="isOpen" (click)="closeSidenav()"></div>
+<nav #sidenavPanel id="side-navigation" class="sidenav" [class.open]="isOpen" aria-label="Side navigation">
+  <div class="sidenav-heading">
+    <span>Navigation</span>
+    <button type="button" (click)="closeSidenav()" aria-label="Close navigation">×</button>
+  </div>
+  <ul class="sidenav-menu">
+    <li><a routerLink="/homepage" routerLinkActive="active" (click)="closeOnNavigate()">Home <span>01</span></a></li>
+    <li><a routerLink="/about" routerLinkActive="active" (click)="closeOnNavigate()">About <span>02</span></a></li>
+    <li><a routerLink="/portfolio" routerLinkActive="active" (click)="closeOnNavigate()">Portfolio <span>03</span></a></li>
+    <li><a *ngIf="user$ | async" routerLink="/account" routerLinkActive="active" (click)="closeOnNavigate()">Saved work <span>04</span></a></li>
+    <li><a *ngIf="isAdmin$ | async" routerLink="/admin" routerLinkActive="active" (click)="closeOnNavigate()">Admin <span>05</span></a></li>
+  </ul>
+  <p class="sidenav-note">Software, interfaces, and ideas from Taoyuan.</p>
+</nav>
