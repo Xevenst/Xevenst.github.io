@@ -6,12 +6,9 @@ import { NavbarComponent } from './shared/navbar/navbar';
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, NavbarComponent],
-  template: `
-    <app-navbar></app-navbar>
-    <router-outlet></router-outlet>
-  `,
-  styles: []
+  templateUrl: './app.html',
+  styleUrl: './app.scss',
 })
-export class App { 
-  public theme = 'dark';
+export class App {
+  public currentYear = new Date().getFullYear();
 }

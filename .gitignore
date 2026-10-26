@@ -65,6 +65,8 @@ Thumbs.db
 .env
 .env.local
 .env.*.local
+src/environments/environment.local.ts
+src/environments/environment.*.local.ts
 
 # Build
 /bazel-out

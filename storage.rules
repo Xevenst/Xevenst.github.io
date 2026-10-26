@@ -1,0 +1,19 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isAdmin() {
+      return request.auth != null
+        && firestore.exists(/databases/(default)/documents/admin_users/$(request.auth.uid));
+    }
+
+    match /portfolio-files/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /private-files/{allPaths=**} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

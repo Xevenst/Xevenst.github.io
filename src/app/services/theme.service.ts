@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -8,8 +9,12 @@ export class ThemeService {
     private themeSubject = new BehaviorSubject<'dark' | 'light'>('dark');
     public theme$ = this.themeSubject.asObservable();
 
-    constructor() {
-        this.applyTheme('dark');
+    constructor(@Inject(PLATFORM_ID) platformId: object) {
+        const browser = isPlatformBrowser(platformId);
+        const stored = browser ? localStorage.getItem('xevenst-theme') : null;
+        const initialTheme = stored === 'light' ? 'light' : 'dark';
+        this.themeSubject.next(initialTheme);
+        this.applyTheme(initialTheme);
     }
 
     toggleTheme() {
@@ -17,6 +22,9 @@ export class ThemeService {
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         this.themeSubject.next(newTheme);
         this.applyTheme(newTheme);
+        if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('xevenst-theme', newTheme);
+        }
     }
 
     private applyTheme(theme: 'dark' | 'light') {

@@ -1,0 +1,40 @@
+import { PortfolioProject } from '../models/portfolio.models';
+
+export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
+  {
+    id: 'split-bill-mobile-app',
+    title: 'Split Bill Mobile App',
+    year: '2023',
+    type: 'Mobile product',
+    summary: 'A practical Flutter app for splitting payments, tracking settlements, and keeping bill details close at hand.',
+    details: 'Built with Flutter and Hive to save stores, item lists, contacts, and unsettled amounts locally.',
+    technologies: ['Flutter', 'Dart', 'Hive'],
+    githubUrl: 'https://github.com/Xevenst/Split-Bill-Mobile-App',
+    featured: true,
+    accent: '#51d8c6',
+  },
+  {
+    id: 'movie-rating-predictor',
+    title: 'Movie Rating Predictor',
+    year: '2022',
+    type: 'Data science',
+    summary: 'A university assignment exploring movie-rating prediction with multiple machine-learning approaches.',
+    details: 'The project experiments with models including K-means and Naive Bayes against a movie ratings dataset.',
+    technologies: ['Python', 'Data Science', 'Machine Learning'],
+    githubUrl: 'https://github.com/Xevenst/MovLensDataSet',
+    featured: true,
+    accent: '#6ca8ff',
+  },
+  {
+    id: 'chromesthesia',
+    title: 'Chromesthesia',
+    year: '2022',
+    type: 'Interactive game',
+    summary: 'A Unity rhythm game where swipe-based play meets sound processing and colour.',
+    details: 'An undergraduate project created in Unity and C#, recognised with the National Dong Hwa University Undergraduate Project Award.',
+    technologies: ['Unity', 'C#', 'Audio Processing'],
+    githubUrl: 'https://github.com/Xevenst/Chromesthesia',
+    featured: true,
+    accent: '#b58cff',
+  },
+];
