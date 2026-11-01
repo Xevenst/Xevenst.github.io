@@ -23,3 +23,10 @@ service-account key or other private credential in this secret.
 The workflow builds on pushes and pull requests. Fork pull requests do not receive repository
 secrets, so their build uses the unconfigured Firebase fallback. Local builds also use that
 fallback unless Firebase configuration is supplied through the build workflow.
+
+## Deploy to GitHub Pages
+
+The `Deploy GitHub Pages` workflow publishes the prerendered Angular site when changes are
+pushed to the `AngularRework` branch, or when manually started from the Actions tab. In the
+repository's **Settings → Pages**, set the publishing source to **GitHub Actions**. The workflow
+uses the `FIREBASE_CONFIG_JSON` Actions secret at build time.
