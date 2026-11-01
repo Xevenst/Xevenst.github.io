@@ -21,8 +21,20 @@ The resulting browser app necessarily contains this public web configuration; ne
 service-account key or other private credential in this secret.
 
 The workflow builds on pushes and pull requests. Fork pull requests do not receive repository
-secrets, so their build uses the unconfigured Firebase fallback. Local builds also use that
-fallback unless Firebase configuration is supplied through the build workflow.
+secrets, so their build uses the unconfigured Firebase fallback. For local Firebase testing,
+run the following in PowerShell from the repository folder, replacing the placeholders with the
+Firebase Web app values. Run these commands in each new PowerShell session where you want to
+configure the app; the generated `src/environments/firebase-config.ts` is gitignored and stays
+on your computer.
+
+```powershell
+$env:FIREBASE_CONFIG_JSON = '{"apiKey":"...","authDomain":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"...","measurementId":"..."}'
+node scripts/configure-firebase.mjs
+npm start
+```
+
+Do not paste the values into chat or commit the generated config. Without generating it, a fresh
+local checkout uses the unconfigured Firebase fallback.
 
 ## Deploy to GitHub Pages
 

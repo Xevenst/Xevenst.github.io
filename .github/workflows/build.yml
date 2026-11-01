@@ -28,5 +28,9 @@ jobs:
         env:
           FIREBASE_CONFIG_JSON: ${{ secrets.FIREBASE_CONFIG_JSON }}
 
+      - name: Configure Firebase fallback for fork pull requests
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository
+        run: node scripts/configure-firebase.mjs --allow-unconfigured
+
       - name: Build Angular app
         run: npm run build
