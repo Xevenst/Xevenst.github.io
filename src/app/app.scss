@@ -1,5 +1,5 @@
 .app-main {
-  min-height: calc(100vh - 144px);
+  min-height: calc(100vh - 140px);
 }
 
 .site-footer {
@@ -7,17 +7,18 @@
   justify-content: space-between;
   gap: 1rem;
   align-items: center;
-  max-width: 1240px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 2rem clamp(1.25rem, 4vw, 3rem) 2.5rem;
+  padding: 1.5rem clamp(1.25rem, 5vw, 4rem) 2rem;
   border-top: 1px solid var(--border-color);
   color: var(--text-muted);
-  font-size: 0.78rem;
-  letter-spacing: 0.06em;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 
   p { margin: 0; }
-  a { color: var(--accent-color); }
+  a { color: var(--text-primary); }
+  a:hover { color: var(--accent-color); }
 }
 
 @media (max-width: 620px) {

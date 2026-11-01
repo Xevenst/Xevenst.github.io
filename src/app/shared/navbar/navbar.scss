@@ -5,32 +5,31 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1400px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 1.15rem clamp(1.25rem, 4vw, 3rem);
-  background: color-mix(in srgb, var(--bg-primary) 88%, transparent);
+  padding: 1.25rem clamp(1.25rem, 5vw, 4rem);
+  background: color-mix(in srgb, var(--bg-primary) 94%, transparent);
   border-bottom: 1px solid var(--border-color);
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(14px);
 }
 
 .brand-link {
   display: inline-flex;
   align-items: center;
-  gap: .6rem;
+  gap: .7rem;
   color: var(--text-primary);
   font-family: var(--font-display);
-  font-size: 1.2rem;
-  font-weight: 800;
-  letter-spacing: -.03em;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -.04em;
 }
 
 .brand-mark {
   display: grid;
-  width: 2rem;
-  height: 2rem;
+  width: 1.8rem;
+  height: 1.8rem;
   place-items: center;
-  border: 1px solid var(--accent-color);
-  border-radius: 50%;
+  border: 1px solid var(--border-color);
   color: var(--accent-color);
   font-family: var(--font-mono);
   font-size: .85rem;
@@ -41,14 +40,14 @@
 .navbar-menu {
   display: flex;
   align-items: center;
-  gap: clamp(.7rem, 2.5vw, 2rem);
+  gap: clamp(.8rem, 2.5vw, 2.2rem);
 }
 
 .navbar-menu a {
   color: var(--text-muted);
   font-size: .75rem;
-  font-weight: 700;
-  letter-spacing: .1em;
+  font-weight: 500;
+  letter-spacing: .06em;
   text-transform: uppercase;
   transition: color .2s ease;
 }
@@ -62,14 +61,14 @@
   height: 2.25rem;
   place-items: center;
   border: 1px solid var(--border-color);
-  border-radius: 50%;
+  border-radius: 0;
   background: transparent;
-  color: var(--accent-color);
+  color: var(--text-muted);
   cursor: pointer;
   font-size: 1.1rem;
 }
 
-.theme-toggle:hover { border-color: var(--accent-color); background: var(--surface); }
+.theme-toggle:hover { border-color: var(--accent-color); background: var(--surface); color: var(--accent-color); }
 
 @media (max-width: 730px) {
   .navbar { padding-block: .85rem; }

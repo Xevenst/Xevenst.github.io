@@ -1,6 +1,6 @@
 .about { padding-top: clamp(4rem, 9vw, 8rem); padding-bottom: 6rem; }
 .about-header { max-width: 850px; margin-bottom: clamp(5rem, 10vw, 9rem); }
-.about-header h1 { margin-bottom: 2rem; font-size: clamp(3rem, 7vw, 7rem); letter-spacing: -.08em; line-height: .92; }
+.about-header h1 { margin-bottom: 2rem; font-size: clamp(3rem, 7vw, 7rem); font-weight: 500; letter-spacing: -.08em; line-height: .94; }
 .about-lede { max-width: 570px; margin: 0; color: var(--text-muted); font-size: 1.1rem; line-height: 1.75; }
 .about-copy { max-width: 680px; color: var(--text-muted); font-size: .98rem; line-height: 1.75; }
 .about-layout { display: grid; grid-template-columns: 190px 1fr; gap: clamp(2rem, 8vw, 9rem); }
@@ -10,13 +10,13 @@
 .about-content { max-width: 820px; }
 .about-block { display: grid; grid-template-columns: 42px 1fr; gap: 1.5rem; padding-bottom: 5rem; }
 .block-number { margin: .4rem 0 0; color: var(--accent-color); font: .7rem var(--font-mono); }
-.about-block h2 { margin-bottom: 2rem; font-size: clamp(2rem, 4vw, 3.7rem); }
+.about-block h2 { margin-bottom: 2rem; font-size: clamp(2rem, 4vw, 3.7rem); font-weight: 500; }
 .timeline-item { padding: 0 0 2rem 1.2rem; border-left: 1px solid var(--border-color); }
 .timeline-date, .community-list span { margin-bottom: .7rem; color: var(--accent-color); font: .68rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
 .timeline-item h3, .community-list h3 { margin: 0 0 .35rem; font-size: 1.2rem; }
 .role { margin: 0 0 .7rem; color: var(--text-primary) !important; }
 .timeline-item p, .community-list p, .feature-note span, .two-column p { color: var(--text-muted); font-size: .93rem; line-height: 1.7; }
-.feature-note { display: flex; flex-direction: column; gap: .5rem; padding: 1.5rem; border: 1px solid var(--border-color); background: var(--surface); }
+.feature-note { display: flex; flex-direction: column; gap: .5rem; padding: 1.25rem 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
 .feature-note strong { font-size: 1.15rem; }
 .community-list { display: grid; gap: 1.5rem; }
 .community-list article { padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); }
