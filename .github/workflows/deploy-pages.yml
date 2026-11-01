@@ -3,7 +3,7 @@ name: Deploy GitHub Pages
 on:
   push:
     branches:
-      - AngularRework
+      - Live
   workflow_dispatch:
 
 permissions:

@@ -19,6 +19,23 @@ export class PortfolioComponent {
   dataSource = 'local';
   dataError: string | null = null;
   readonly user$;
+  readonly documents = [
+    {
+      title: 'ATS Resume',
+      image: '/assets/live/images/Steven Jonathan ATS Resume.png',
+      pdf: '/assets/live/documents/Steven Jonathan ATS Resume.pdf',
+    },
+    {
+      title: 'Modern Resume',
+      image: '/assets/live/images/Steven Jonathan Modern Resume.png',
+      pdf: '/assets/live/documents/Steven Jonathan Modern Resume.pdf',
+    },
+    {
+      title: 'Portfolio PDF',
+      image: '/assets/live/images/Steven Jonathan Portfolio.png',
+      pdf: '/assets/live/documents/Steven Jonathan Portfolio.pdf',
+    },
+  ];
 
   constructor(private readonly database: DatabaseService, private readonly auth: AuthService) {
     this.user$ = auth.user$;

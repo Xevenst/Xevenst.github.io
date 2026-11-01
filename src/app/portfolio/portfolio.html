@@ -16,5 +16,21 @@
       <a class="github-link" [href]="project.githubUrl" target="_blank" rel="noreferrer">Open on GitHub <span>↗</span></a>
     </article>
   </div>
-  <section class="portfolio-note"><p class="eyebrow">A note on assets</p><p>No resume or portfolio download links are shown until their files are available in the public assets directory. The projects above link directly to their public GitHub repositories.</p></section>
+  <section class="portfolio-documents" aria-labelledby="portfolio-documents-heading">
+    <header class="portfolio-documents-heading">
+      <p class="eyebrow">Resume &amp; documents</p>
+      <h2 id="portfolio-documents-heading">A few ways to get <em>the full picture.</em></h2>
+    </header>
+    <div class="portfolio-document-grid">
+      <article class="portfolio-document" *ngFor="let document of documents">
+        <a class="portfolio-document-preview" [href]="document.pdf" target="_blank" rel="noreferrer" [attr.aria-label]="'Open ' + document.title + ' PDF'">
+          <img [src]="document.image" [alt]="document.title + ' preview'" loading="lazy">
+        </a>
+        <div class="portfolio-document-info">
+          <h3>{{ document.title }}</h3>
+          <a [href]="document.pdf" target="_blank" rel="noreferrer">Open PDF <span aria-hidden="true">↗</span></a>
+        </div>
+      </article>
+    </div>
+  </section>
 </div>

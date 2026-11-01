@@ -4,7 +4,7 @@
 
 .site-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: 1rem;
   align-items: center;
   max-width: 1440px;
@@ -17,8 +17,6 @@
   text-transform: uppercase;
 
   p { margin: 0; }
-  a { color: var(--text-primary); }
-  a:hover { color: var(--accent-color); }
 }
 
 @media (max-width: 620px) {

@@ -1,3 +1,4 @@
+import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HomepageComponent } from './homepage';
@@ -8,7 +9,8 @@ describe('HomepageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HomepageComponent]
+      imports: [HomepageComponent],
+      providers: [provideZonelessChangeDetection()]
     })
     .compileComponents();
 
@@ -19,5 +21,12 @@ describe('HomepageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should show a welcome screen with the animated name', () => {
+    const heading = fixture.nativeElement.querySelector('h1') as HTMLHeadingElement;
+    expect(heading.getAttribute('aria-label')).toBe('Steven Jonathan');
+    expect(fixture.nativeElement.textContent).toContain('Welcome. Stay a while.');
+    expect(fixture.nativeElement.querySelectorAll('.name-letter').length).toBe(15);
   });
 });
