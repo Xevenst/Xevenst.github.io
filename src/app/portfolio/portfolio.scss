@@ -23,9 +23,6 @@
 .details { margin: 1.1rem 0; padding-top: 1rem; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: .83rem; line-height: 1.6; }
 .technology-list { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1.3rem 0 1.5rem; }
 .technology-list span { padding: .38rem .45rem; border: 1px solid var(--border-color); color: var(--text-muted); font: .62rem var(--font-mono); }
-.portfolio-action-link { display: flex; width: 100%; min-height: 2.75rem; align-items: center; justify-content: space-between; gap: .75rem; margin-top: auto; padding: .7rem .85rem; border: 1px solid var(--accent-color); background: color-mix(in srgb, var(--accent-color) 12%, var(--surface)); color: var(--text-primary); font: 700 .68rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
-.portfolio-action-link:hover { border-color: var(--accent-color); }
-.portfolio-action-link span { color: var(--accent-color); }
 .portfolio-documents { margin-top: clamp(5rem, 10vw, 8rem); padding-top: 2rem; border-top: 1px solid var(--border-color); }
 .portfolio-documents-heading { max-width: 650px; margin-bottom: 2rem; }
 .portfolio-documents-heading .eyebrow { color: var(--accent-color); font: .68rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
