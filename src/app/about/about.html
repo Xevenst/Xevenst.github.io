@@ -45,7 +45,7 @@
             <a routerLink="/portfolio">View all <span aria-hidden="true">↗</span></a>
           </div>
           <div class="about-project-grid">
-            <a class="about-project" *ngFor="let project of featuredProjects; let index = index" [href]="project.githubUrl" target="_blank" rel="noreferrer">
+            <article class="about-project" *ngFor="let project of featuredProjects; let index = index">
               <span class="about-project-number">0{{ index + 1 }} / {{ project.year }}</span>
               <div class="about-project-art" [style.--project-accent]="project.accent">
                 <span>{{ project.title.split(' ')[0] }}</span>
@@ -53,8 +53,10 @@
               <p class="card-kicker">{{ project.type }}</p>
               <h3>{{ project.title }}</h3>
               <p>{{ project.summary }}</p>
-              <span class="about-project-link">Open on GitHub ↗</span>
-            </a>
+              <a class="about-project-link" [href]="project.githubUrl" target="_blank" rel="noreferrer">
+                Open on GitHub <span aria-hidden="true">↗</span>
+              </a>
+            </article>
           </div>
         </div>
       </section>
