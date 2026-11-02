@@ -43,6 +43,7 @@ em { color: var(--accent-color); font-family: var(--font-serif); font-weight: 40
 .portfolio .portfolio-action-link { display: flex; width: 100%; min-height: 2.75rem; align-items: center; justify-content: space-between; gap: .75rem; margin-top: auto; padding: .7rem .85rem; border: 1px solid var(--accent-color); background: color-mix(in srgb, var(--accent-color) 12%, var(--surface)); color: var(--text-primary); font: 700 .68rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
 .portfolio .portfolio-action-link:hover { border-color: var(--accent-color); }
 .portfolio .portfolio-action-link span { color: var(--accent-color); }
+.portfolio .portfolio-card > a[target="_blank"] { display: flex; width: 100%; min-height: 2.75rem; align-items: center; justify-content: space-between; gap: .75rem; margin-top: auto; padding: .7rem .85rem; border: 1px solid var(--accent-color); background: color-mix(in srgb, var(--accent-color) 12%, var(--surface)); color: var(--text-primary); font: 700 .68rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
 
 @media (max-width: 600px) { .page-shell { width: calc(100% - 2.5rem); } }
 @media (prefers-reduced-motion: reduce) {
