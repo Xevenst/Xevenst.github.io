@@ -13,7 +13,7 @@
       <p class="card-kicker">{{ project.type }}</p><h2>{{ project.title }}</h2><p>{{ project.summary }}</p>
       <p class="details">{{ project.details }}</p>
       <div class="technology-list"><span *ngFor="let technology of project.technologies">{{ technology }}</span></div>
-      <a class="github-link" [href]="project.githubUrl" target="_blank" rel="noreferrer">Open on GitHub <span>↗</span></a>
+      <a class="portfolio-action-link" [href]="project.githubUrl" target="_blank" rel="noreferrer">Open on GitHub <span>↗</span></a>
     </article>
   </div>
   <section class="portfolio-documents" aria-labelledby="portfolio-documents-heading">
@@ -28,7 +28,7 @@
         </a>
         <div class="portfolio-document-info">
           <h3>{{ document.title }}</h3>
-          <a [href]="document.pdf" target="_blank" rel="noreferrer">Open PDF <span aria-hidden="true">↗</span></a>
+          <a class="portfolio-action-link" [href]="document.pdf" target="_blank" rel="noreferrer">Open PDF <span aria-hidden="true">↗</span></a>
         </div>
       </article>
     </div>
