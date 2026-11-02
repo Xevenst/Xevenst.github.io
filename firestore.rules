@@ -16,6 +16,11 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    match /site_content/{contentId} {
+      allow read: if contentId in ['about', 'portfolio'];
+      allow write: if isAdmin() && contentId in ['about', 'portfolio'];
+    }
+
     match /users/{userId}/bookmarks/{projectId} {
       allow read, write: if signedIn() && request.auth.uid == userId;
     }

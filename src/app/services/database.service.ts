@@ -4,11 +4,13 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   setDoc,
 } from 'firebase/firestore';
 import { PORTFOLIO_PROJECTS } from '../data/portfolio.data';
-import { PortfolioProject } from '../models/portfolio.models';
+import { DEFAULT_ABOUT_CONTENT, DEFAULT_PORTFOLIO_CONTENT } from '../data/site-copy.data';
+import { AboutPageContent, PortfolioPageContent, PortfolioProject } from '../models/portfolio.models';
 import { AuthService } from './auth.service';
 
 export type PortfolioDataSource = 'local' | 'firebase';
@@ -31,8 +33,12 @@ export class DatabaseService {
   }
 
   async getProjects(): Promise<PortfolioProject[]> {
+    this.errorSubject.next(null);
     const database = this.authService.database;
-    if (!database) return PORTFOLIO_PROJECTS;
+    if (!database) {
+      this.sourceSubject.next('local');
+      return PORTFOLIO_PROJECTS;
+    }
     try {
       const snapshot = await getDocs(collection(database, 'portfolio_projects'));
       const projects = snapshot.docs
@@ -45,6 +51,52 @@ export class DatabaseService {
       this.sourceSubject.next('local');
       return PORTFOLIO_PROJECTS;
     }
+  }
+
+  async getAboutContent(): Promise<AboutPageContent> {
+    this.errorSubject.next(null);
+    const database = this.authService.database;
+    if (!database) return DEFAULT_ABOUT_CONTENT;
+    try {
+      const snapshot = await getDoc(doc(database, 'site_content', 'about'));
+      if (!snapshot.exists()) return DEFAULT_ABOUT_CONTENT;
+      const value = snapshot.data();
+      if (!this.isStringRecord(value, DEFAULT_ABOUT_CONTENT)) {
+        throw new Error('The About page content in Firebase is incomplete or invalid.');
+      }
+      return value;
+    } catch (error: unknown) {
+      this.errorSubject.next(error instanceof Error ? error.message : 'About page content could not be loaded.');
+      return DEFAULT_ABOUT_CONTENT;
+    }
+  }
+
+  async saveAboutContent(content: AboutPageContent): Promise<void> {
+    this.requireAdmin();
+    await setDoc(doc(this.requireDatabase(), 'site_content', 'about'), content);
+  }
+
+  async getPortfolioPageContent(): Promise<PortfolioPageContent> {
+    this.errorSubject.next(null);
+    const database = this.authService.database;
+    if (!database) return DEFAULT_PORTFOLIO_CONTENT;
+    try {
+      const snapshot = await getDoc(doc(database, 'site_content', 'portfolio'));
+      if (!snapshot.exists()) return DEFAULT_PORTFOLIO_CONTENT;
+      const value = snapshot.data();
+      if (!this.isStringRecord(value, DEFAULT_PORTFOLIO_CONTENT)) {
+        throw new Error('The Portfolio page content in Firebase is incomplete or invalid.');
+      }
+      return value;
+    } catch (error: unknown) {
+      this.errorSubject.next(error instanceof Error ? error.message : 'Portfolio page content could not be loaded.');
+      return DEFAULT_PORTFOLIO_CONTENT;
+    }
+  }
+
+  async savePortfolioPageContent(content: PortfolioPageContent): Promise<void> {
+    this.requireAdmin();
+    await setDoc(doc(this.requireDatabase(), 'site_content', 'portfolio'), content);
   }
 
   async getBookmarks(): Promise<string[]> {
@@ -101,5 +153,11 @@ export class DatabaseService {
       && typeof candidate['githubUrl'] === 'string'
       && typeof candidate['featured'] === 'boolean'
       && typeof candidate['accent'] === 'string';
+  }
+
+  private isStringRecord<T extends object>(value: unknown, shape: T): value is T {
+    if (typeof value !== 'object' || value === null || Array.isArray(value)) return false;
+    const candidate = value as Record<string, unknown>;
+    return Object.keys(shape).every((key) => typeof candidate[key] === 'string');
   }
 }

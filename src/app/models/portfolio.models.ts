@@ -11,6 +11,79 @@ export interface PortfolioProject {
   accent: string;
 }
 
+export interface AboutPageContent {
+  heroEyebrow: string;
+  heroTitle: string;
+  heroAccent: string;
+  heroBiography: string;
+  heroRole: string;
+  highlightOneValue: string;
+  highlightOneLabel: string;
+  highlightTwoValue: string;
+  highlightTwoLabel: string;
+  highlightThreeValue: string;
+  highlightThreeLabel: string;
+  highlightNote: string;
+  highlightsLabel: string;
+  onThisPageLabel: string;
+  navIntroduction: string;
+  navWork: string;
+  navEducation: string;
+  navExperience: string;
+  navCommunity: string;
+  navToolkit: string;
+  introductionHeading: string;
+  introductionCopy: string;
+  availability: string;
+  selectedWorkEyebrow: string;
+  selectedWorkHeading: string;
+  selectedWorkAccent: string;
+  viewAllLabel: string;
+  openGithubLabel: string;
+  educationHeading: string;
+  educationDegree: string;
+  educationSchool: string;
+  educationDetails: string;
+  experienceHeading: string;
+  experienceEntries: string;
+  communityHeading: string;
+  communityEntries: string;
+  toolkitHeading: string;
+  skills: string;
+  languagesHeading: string;
+  languages: string;
+  coursesHeading: string;
+  courses: string;
+  contactEyebrow: string;
+  contactTitle: string;
+  contactAccent: string;
+  contactButton: string;
+  contactEmail: string;
+}
+
+export interface PortfolioPageContent {
+  eyebrow: string;
+  title: string;
+  titleAccent: string;
+  introduction: string;
+  projectCountLabel: string;
+  dataLabel: string;
+  signInToSaveLabel: string;
+  viewSavedLabel: string;
+  loadingLabel: string;
+  signInRequiredMessage: string;
+  saveProjectLabel: string;
+  removeBookmarkLabel: string;
+  openGithubLabel: string;
+  resumeEyebrow: string;
+  resumeTitle: string;
+  resumeAccent: string;
+  atsResumeTitle: string;
+  modernResumeTitle: string;
+  portfolioPdfTitle: string;
+  openPdfLabel: string;
+}
+
 export interface AuthUser {
   uid: string;
   email: string | null;

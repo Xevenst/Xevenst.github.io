@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
-import { PortfolioProject } from '../models/portfolio.models';
+import { DEFAULT_PORTFOLIO_CONTENT } from '../data/site-copy.data';
+import { PortfolioPageContent, PortfolioProject } from '../models/portfolio.models';
 
 @Component({
   selector: 'app-portfolio',
@@ -18,31 +19,37 @@ export class PortfolioComponent {
   loading = true;
   dataSource = 'local';
   dataError: string | null = null;
+  content: PortfolioPageContent = DEFAULT_PORTFOLIO_CONTENT;
   readonly user$;
-  readonly documents = [
-    {
-      title: 'ATS Resume',
-      image: '/assets/live/images/Steven Jonathan ATS Resume.png',
-      pdf: '/assets/live/documents/Steven Jonathan ATS Resume.pdf',
-    },
-    {
-      title: 'Modern Resume',
-      image: '/assets/live/images/Steven Jonathan Modern Resume.png',
-      pdf: '/assets/live/documents/Steven Jonathan Modern Resume.pdf',
-    },
-    {
-      title: 'Portfolio PDF',
-      image: '/assets/live/images/Steven Jonathan Portfolio.png',
-      pdf: '/assets/live/documents/Steven Jonathan Portfolio.pdf',
-    },
-  ];
-
   constructor(private readonly database: DatabaseService, private readonly auth: AuthService) {
     this.user$ = auth.user$;
   }
 
+  get documents() {
+    return [
+      {
+        title: this.content.atsResumeTitle,
+        image: '/assets/live/images/Steven Jonathan ATS Resume.png',
+        pdf: '/assets/live/documents/Steven Jonathan ATS Resume.pdf',
+      },
+      {
+        title: this.content.modernResumeTitle,
+        image: '/assets/live/images/Steven Jonathan Modern Resume.png',
+        pdf: '/assets/live/documents/Steven Jonathan Modern Resume.pdf',
+      },
+      {
+        title: this.content.portfolioPdfTitle,
+        image: '/assets/live/images/Steven Jonathan Portfolio.png',
+        pdf: '/assets/live/documents/Steven Jonathan Portfolio.pdf',
+      },
+    ];
+  }
+
   async ngOnInit(): Promise<void> {
-    this.projects = await this.database.getProjects();
+    [this.projects, this.content] = await Promise.all([
+      this.database.getProjects(),
+      this.database.getPortfolioPageContent(),
+    ]);
     this.dataSource = this.database.source;
     this.dataError = this.database.error;
     this.loading = false;
@@ -53,7 +60,7 @@ export class PortfolioComponent {
 
   async toggleBookmark(project: PortfolioProject): Promise<void> {
     if (!this.auth.currentUser) {
-      this.dataError = 'Sign in to save projects to your personal collection.';
+      this.dataError = this.content.signInRequiredMessage;
       return;
     }
     const saved = !this.savedIds.has(project.id);

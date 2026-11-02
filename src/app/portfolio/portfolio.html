@@ -1,25 +1,25 @@
 <div class="portfolio page-shell">
   <header class="portfolio-header">
-    <div><p class="eyebrow"><span class="eyebrow-line"></span> Selected work / 2022—2023</p><h1>Small projects.<br /><em>Real questions.</em></h1></div>
-    <p class="portfolio-intro">A collection of experiments, assignments, and products exploring how software can make everyday tasks more understandable.</p>
+    <div><p class="eyebrow"><span class="eyebrow-line"></span> {{ content.eyebrow }}</p><h1>{{ content.title }}<br /><em>{{ content.titleAccent }}</em></h1></div>
+    <p class="portfolio-intro">{{ content.introduction }}</p>
   </header>
-  <div class="portfolio-status"><span><i></i> {{ projects.length }} projects</span><span>Data: {{ dataSource }}</span><a *ngIf="!(user$ | async)" routerLink="/login">Sign in to save work →</a><a *ngIf="user$ | async" routerLink="/account">View saved work →</a></div>
-  <p *ngIf="loading" class="notice">Loading portfolio data…</p>
+  <div class="portfolio-status"><span><i></i> {{ projects.length }} {{ content.projectCountLabel }}</span><span>{{ content.dataLabel }} {{ dataSource }}</span><a *ngIf="!(user$ | async)" routerLink="/login">{{ content.signInToSaveLabel }}</a><a *ngIf="user$ | async" routerLink="/account">{{ content.viewSavedLabel }}</a></div>
+  <p *ngIf="loading" class="notice">{{ content.loadingLabel }}</p>
   <p *ngIf="dataError" class="notice notice-error">{{ dataError }}</p>
   <div class="portfolio-grid">
     <article class="portfolio-card" *ngFor="let project of projects; let index = index" [style.--project-accent]="project.accent">
-      <div class="portfolio-card-top"><span>0{{ index + 1 }} / {{ project.year }}</span><button type="button" (click)="toggleBookmark(project)" [attr.aria-label]="isSaved(project.id) ? 'Remove bookmark' : 'Save project'" [class.saved]="isSaved(project.id)">{{ isSaved(project.id) ? '★' : '☆' }}</button></div>
+      <div class="portfolio-card-top"><span>0{{ index + 1 }} / {{ project.year }}</span><button type="button" (click)="toggleBookmark(project)" [attr.aria-label]="isSaved(project.id) ? content.removeBookmarkLabel : content.saveProjectLabel" [class.saved]="isSaved(project.id)">{{ isSaved(project.id) ? '★' : '☆' }}</button></div>
       <div class="portfolio-art"><span>{{ project.title.split(' ')[0] }}</span><b>{{ project.year }}</b></div>
       <p class="card-kicker">{{ project.type }}</p><h2>{{ project.title }}</h2><p>{{ project.summary }}</p>
       <p class="details">{{ project.details }}</p>
       <div class="technology-list"><span *ngFor="let technology of project.technologies">{{ technology }}</span></div>
-      <a class="portfolio-action-link" [href]="project.githubUrl" target="_blank" rel="noreferrer">Open on GitHub <span>↗</span></a>
+      <a class="portfolio-action-link" [href]="project.githubUrl" target="_blank" rel="noreferrer">{{ content.openGithubLabel }} <span>↗</span></a>
     </article>
   </div>
   <section class="portfolio-documents" aria-labelledby="portfolio-documents-heading">
     <header class="portfolio-documents-heading">
-      <p class="eyebrow">Resume &amp; documents</p>
-      <h2 id="portfolio-documents-heading">A few ways to get <em>the full picture.</em></h2>
+      <p class="eyebrow">{{ content.resumeEyebrow }}</p>
+      <h2 id="portfolio-documents-heading">{{ content.resumeTitle }} <em>{{ content.resumeAccent }}</em></h2>
     </header>
     <div class="portfolio-document-grid">
       <article class="portfolio-document" *ngFor="let document of documents">
@@ -28,7 +28,7 @@
         </a>
         <div class="portfolio-document-info">
           <h3>{{ document.title }}</h3>
-          <a class="portfolio-action-link" [href]="document.pdf" target="_blank" rel="noreferrer">Open PDF <span aria-hidden="true">↗</span></a>
+          <a class="portfolio-action-link" [href]="document.pdf" target="_blank" rel="noreferrer">{{ content.openPdfLabel }} <span aria-hidden="true">↗</span></a>
         </div>
       </article>
     </div>

@@ -2,8 +2,55 @@
   <header><p class="eyebrow"><span class="eyebrow-line"></span> Restricted area</p><h1>Content<br /><em>control room.</em></h1><p>Manage portfolio data, upload files to Firebase Storage, and keep private diary entries in Firebase. This page is hidden from non-administrators and protected by Firestore and Storage rules.</p></header>
   <p *ngIf="message" class="admin-message">{{ message }}</p><p *ngIf="error" class="admin-error">{{ error }}</p>
   <section class="admin-layout">
-    <div class="management-panel"><div class="panel-heading"><h2>Projects</h2><span>{{ projects.length }} records</span></div><div class="managed-item" *ngFor="let project of projects"><div><strong>{{ project.title }}</strong><span>{{ project.year }} · {{ project.type }}</span></div><div><button type="button" (click)="edit(project)">Edit</button><button type="button" class="danger" (click)="remove(project)">Remove</button></div></div></div>
-    <div class="editor-panel" *ngIf="selected as project"><div class="panel-heading"><h2>Edit project</h2><button type="button" (click)="selected = null">Close</button></div><label>Title<input [(ngModel)]="project.title" /></label><label>Summary<textarea [(ngModel)]="project.summary" rows="3"></textarea></label><label>GitHub URL<input [(ngModel)]="project.githubUrl" /></label><button type="button" class="save-button" (click)="save()">Save to Firebase ↗</button></div>
+    <div class="management-panel">
+      <div class="panel-heading">
+        <h2>Projects</h2>
+        <span>{{ projects.length }} records · {{ projectsSource }}</span>
+      </div>
+      <button *ngIf="projectsSource === 'local'" class="save-button" type="button" (click)="publishStarterProjects()">Publish starter projects to Firestore</button>
+      <div class="managed-item" *ngFor="let project of projects">
+        <div><strong>{{ project.title }}</strong><span>{{ project.year }} · {{ project.type }}</span></div>
+        <div><button type="button" (click)="edit(project)">Edit</button><button type="button" class="danger" (click)="remove(project)">Remove</button></div>
+      </div>
+    </div>
+    <div class="editor-panel" *ngIf="selected as project">
+      <div class="panel-heading"><h2>Edit project</h2><button type="button" (click)="selected = null">Close</button></div>
+      <label>Title<input [(ngModel)]="project.title" /></label>
+      <label>Year<input [(ngModel)]="project.year" /></label>
+      <label>Project type<input [(ngModel)]="project.type" /></label>
+      <label>Summary<textarea [(ngModel)]="project.summary" rows="3"></textarea></label>
+      <label>Details<textarea [(ngModel)]="project.details" rows="4"></textarea></label>
+      <label>Technologies (one per line)<textarea [(ngModel)]="technologiesText" rows="4"></textarea></label>
+      <label>GitHub URL<input [(ngModel)]="project.githubUrl" /></label>
+      <label>Accent color<input [(ngModel)]="project.accent" /></label>
+      <label class="checkbox-label"><input type="checkbox" [(ngModel)]="project.featured" /> Show on About page</label>
+      <button type="button" class="save-button" (click)="save()">Save project to Firestore ↗</button>
+    </div>
+  </section>
+  <section class="admin-section">
+    <div class="panel-heading"><h2>About page copy</h2><span>Publicly readable · editable here</span></div>
+    <p class="admin-muted">This copy is shown on the public About page. Entries separated with pipes or new lines use the formats shown in their labels.</p>
+    <div class="copy-editor-grid">
+      <ng-container *ngFor="let field of aboutContentFields">
+        <label>{{ field.label }}
+          <textarea *ngIf="field.multiline; else aboutSingleLine" [(ngModel)]="aboutContent[field.key]" rows="4"></textarea>
+          <ng-template #aboutSingleLine><input [(ngModel)]="aboutContent[field.key]" /></ng-template>
+        </label>
+      </ng-container>
+    </div>
+    <button type="button" class="save-button" (click)="saveAboutContent()">Save About copy to Firestore</button>
+  </section>
+  <section class="admin-section">
+    <div class="panel-heading"><h2>Portfolio page copy</h2><span>Publicly readable · editable here</span></div>
+    <div class="copy-editor-grid">
+      <ng-container *ngFor="let field of portfolioContentFields">
+        <label>{{ field.label }}
+          <textarea *ngIf="field.multiline; else portfolioSingleLine" [(ngModel)]="portfolioContent[field.key]" rows="4"></textarea>
+          <ng-template #portfolioSingleLine><input [(ngModel)]="portfolioContent[field.key]" /></ng-template>
+        </label>
+      </ng-container>
+    </div>
+    <button type="button" class="save-button" (click)="savePortfolioContent()">Save Portfolio copy to Firestore</button>
   </section>
   <section class="admin-section">
     <div class="panel-heading"><h2>Files</h2><span>Firebase Storage</span></div>
