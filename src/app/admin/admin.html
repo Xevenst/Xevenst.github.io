@@ -1,5 +1,5 @@
 <div class="admin-page page-shell">
-  <header><p class="eyebrow"><span class="eyebrow-line"></span> Restricted area</p><h1>Content<br /><em>control room.</em></h1><p>Manage portfolio data, upload files to Firebase Storage, and keep private diary entries in Firebase. This page is hidden from non-administrators and protected by Firestore and Storage rules.</p></header>
+  <header><p class="eyebrow"><span class="eyebrow-line"></span> Restricted area</p><h1>Content<br /><em>control room.</em></h1><p>Manage portfolio data, upload files to your configured Google Drive folder, and keep private diary entries in Firebase. This page is hidden from non-administrators and protected by Firestore rules.</p></header>
   <p *ngIf="message" class="admin-message">{{ message }}</p><p *ngIf="error" class="admin-error">{{ error }}</p>
   <section class="admin-layout">
     <div class="management-panel">
@@ -7,7 +7,7 @@
         <h2>Projects</h2>
         <span>{{ projects.length }} records · {{ projectsSource }}</span>
       </div>
-      <button *ngIf="projectsSource === 'local'" class="save-button" type="button" (click)="publishStarterProjects()">Publish starter projects to Firestore</button>
+      <button *ngIf="projects.length === 0" class="save-button" type="button" (click)="publishStarterProjects()">Publish starter projects to Firebase</button>
       <div class="managed-item" *ngFor="let project of projects">
         <div><strong>{{ project.title }}</strong><span>{{ project.year }} · {{ project.type }}</span></div>
         <div><button type="button" (click)="edit(project)">Edit</button><button type="button" class="danger" (click)="remove(project)">Remove</button></div>
@@ -53,11 +53,15 @@
     <button type="button" class="save-button" (click)="savePortfolioContent()">Save Portfolio copy to Firestore</button>
   </section>
   <section class="admin-section">
-    <div class="panel-heading"><h2>Files</h2><span>Firebase Storage</span></div>
-    <label class="upload-control">Upload PDF, image, or audio file<input type="file" accept=".pdf,image/*,audio/*" (change)="upload($event)" [disabled]="uploading" /></label>
+    <div class="panel-heading"><h2>Files</h2><span>Google Drive · fixed folder</span></div>
+    <label class="upload-control">Choose a PDF, image, or audio file<input #fileInput type="file" accept=".pdf,image/*,audio/*" (change)="selectFile($event)" [disabled]="uploading" /></label>
+    <p *ngIf="selectedFile" class="admin-muted">Selected: {{ selectedFile.name }} · {{ selectedFile.size | number }} bytes</p>
+    <label class="checkbox-label"><input type="checkbox" [(ngModel)]="publicFileAccess" [disabled]="uploading" /> Anyone with the link can view this file</label>
+    <button type="button" class="save-button" (click)="upload(fileInput)" [disabled]="!selectedFile || uploading">Upload to Google Drive</button>
+    <button type="button" class="clear-upload" (click)="clearSelectedFile(fileInput)" [disabled]="!selectedFile || uploading">Clear selection</button>
     <p class="admin-muted" *ngIf="uploading">Uploading file…</p>
-    <div class="managed-item" *ngFor="let file of files"><div><strong>{{ file.name }}</strong><span>{{ file.contentType }} · {{ file.size | number }} bytes</span></div><div><a [href]="file.downloadUrl" target="_blank" rel="noreferrer">Open</a><button type="button" class="danger" (click)="removeFile(file)">Remove</button></div></div>
-    <p class="admin-muted" *ngIf="files.length === 0 && !uploading">No Firebase Storage files uploaded yet.</p>
+    <div class="managed-item" *ngFor="let file of files"><div><strong>{{ file.name }}</strong><span>{{ file.visibility }} · {{ file.contentType }} · {{ file.size | number }} bytes</span></div><div><a [href]="file.downloadUrl" target="_blank" rel="noreferrer">Open in Drive</a><button type="button" class="danger" (click)="removeFile(file)">Remove</button></div></div>
+    <p class="admin-muted" *ngIf="files.length === 0 && !uploading">No Google Drive files uploaded yet.</p>
   </section>
   <section class="admin-section">
     <div class="panel-heading"><h2>Private diary</h2><button type="button" (click)="newDiary()">New entry</button></div>

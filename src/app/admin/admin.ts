@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ContentService } from '../services/content.service';
 import { DatabaseService } from '../services/database.service';
@@ -35,24 +35,50 @@ export class AdminComponent {
   message: string | null = null;
   error: string | null = null;
   uploading = false;
+  publicFileAccess = false;
+  selectedFile: File | null = null;
+  private readonly fileChanges = new Map<string, StoredFile | null>();
 
-  constructor(private readonly database: DatabaseService, private readonly content: ContentService) {
+  constructor(
+    private readonly database: DatabaseService,
+    private readonly content: ContentService,
+    private readonly changeDetector: ChangeDetectorRef,
+  ) {
     void this.load();
   }
 
   async load(): Promise<void> {
     try {
-      [this.projects, this.files, this.diaryEntries, this.aboutContent, this.portfolioContent] = await Promise.all([
+      const results = await Promise.allSettled([
         this.database.getProjects(),
         this.content.listFiles(),
         this.content.listDiaryEntries(),
         this.database.getAboutContent(),
         this.database.getPortfolioPageContent(),
       ]);
-      this.projectsSource = this.database.source;
-      this.error = this.database.error;
-    } catch (error: unknown) {
-      this.error = error instanceof Error ? error.message : 'Admin content could not be loaded.';
+
+      if (results[0].status === 'fulfilled') {
+        this.projects = results[0].value;
+        this.projectsSource = this.database.source;
+      }
+      if (results[1].status === 'fulfilled') {
+        const files = new Map(results[1].value.map((file) => [file.id, file]));
+        this.fileChanges.forEach((file, id) => {
+          if (file) files.set(id, file);
+          else files.delete(id);
+        });
+        this.files = [...files.values()].sort((left, right) => right.uploadedAt.localeCompare(left.uploadedAt));
+      }
+      if (results[2].status === 'fulfilled') this.diaryEntries = results[2].value;
+      if (results[3].status === 'fulfilled') this.aboutContent = results[3].value;
+      if (results[4].status === 'fulfilled') this.portfolioContent = results[4].value;
+
+      const failures = results
+        .filter((result): result is PromiseRejectedResult => result.status === 'rejected')
+        .map(({ reason }) => reason instanceof Error ? reason.message : 'Some admin content could not be loaded.');
+      this.error = failures.length ? failures.join(' ') : null;
+    } finally {
+      this.changeDetector.markForCheck();
     }
   }
 
@@ -72,6 +98,8 @@ export class AdminComponent {
       await this.load();
     } catch (error: unknown) {
       this.error = error instanceof Error ? error.message : 'The project could not be saved.';
+    } finally {
+      this.changeDetector.markForCheck();
     }
   }
 
@@ -84,6 +112,8 @@ export class AdminComponent {
       await this.load();
     } catch (error: unknown) {
       this.error = error instanceof Error ? error.message : 'Starter projects could not be published.';
+    } finally {
+      this.changeDetector.markForCheck();
     }
   }
 
@@ -94,6 +124,8 @@ export class AdminComponent {
       this.error = null;
     } catch (error: unknown) {
       this.error = error instanceof Error ? error.message : 'About page copy could not be saved.';
+    } finally {
+      this.changeDetector.markForCheck();
     }
   }
 
@@ -104,6 +136,8 @@ export class AdminComponent {
       this.error = null;
     } catch (error: unknown) {
       this.error = error instanceof Error ? error.message : 'Portfolio page copy could not be saved.';
+    } finally {
+      this.changeDetector.markForCheck();
     }
   }
 
@@ -114,33 +148,57 @@ export class AdminComponent {
       await this.load();
     } catch (error: unknown) {
       this.error = error instanceof Error ? error.message : 'The project could not be removed.';
+    } finally {
+      this.changeDetector.markForCheck();
     }
   }
 
-  async upload(event: Event): Promise<void> {
-    const file = (event.target as HTMLInputElement).files?.[0];
+  selectFile(event: Event): void {
+    this.selectedFile = (event.target as HTMLInputElement).files?.[0] ?? null;
+    this.message = null;
+    this.error = null;
+    this.changeDetector.markForCheck();
+  }
+
+  clearSelectedFile(input: HTMLInputElement): void {
+    this.selectedFile = null;
+    input.value = '';
+    this.changeDetector.markForCheck();
+  }
+
+  async upload(input: HTMLInputElement): Promise<void> {
+    const file = this.selectedFile;
     if (!file) return;
     this.uploading = true;
     this.error = null;
+    let uploaded = false;
     try {
-      await this.content.uploadFile(file);
-      this.message = `${file.name} uploaded to Firebase Storage.`;
-      await this.load();
+      const savedFile = await this.content.uploadFile(file, this.publicFileAccess);
+      this.fileChanges.set(savedFile.id, savedFile);
+      this.files = [savedFile, ...this.files.filter((existing) => existing.id !== savedFile.id)]
+        .sort((left, right) => right.uploadedAt.localeCompare(left.uploadedAt));
+      this.message = `${file.name} uploaded to Google Drive.`;
+      this.selectedFile = null;
+      uploaded = true;
     } catch (error: unknown) {
       this.error = error instanceof Error ? error.message : 'The file could not be uploaded.';
     } finally {
       this.uploading = false;
-      (event.target as HTMLInputElement).value = '';
+      if (uploaded) input.value = '';
+      this.changeDetector.markForCheck();
     }
   }
 
   async removeFile(file: StoredFile): Promise<void> {
     try {
       await this.content.deleteFile(file);
-      this.message = `${file.name} removed from Firebase Storage.`;
-      await this.load();
+      this.fileChanges.set(file.id, null);
+      this.files = this.files.filter((existing) => existing.id !== file.id);
+      this.message = `${file.name} removed from Google Drive.`;
     } catch (error: unknown) {
       this.error = error instanceof Error ? error.message : 'The file could not be removed.';
+    } finally {
+      this.changeDetector.markForCheck();
     }
   }
 
@@ -166,6 +224,8 @@ export class AdminComponent {
       await this.load();
     } catch (error: unknown) {
       this.error = error instanceof Error ? error.message : 'The diary entry could not be saved.';
+    } finally {
+      this.changeDetector.markForCheck();
     }
   }
 
@@ -176,6 +236,8 @@ export class AdminComponent {
       await this.load();
     } catch (error: unknown) {
       this.error = error instanceof Error ? error.message : 'The diary entry could not be removed.';
+    } finally {
+      this.changeDetector.markForCheck();
     }
   }
 }

@@ -35,6 +35,7 @@ jobs:
         run: node scripts/configure-firebase.mjs
         env:
           FIREBASE_CONFIG_JSON: ${{ secrets.FIREBASE_CONFIG_JSON }}
+          GOOGLE_DRIVE_WEB_APP_URL: ${{ vars.GOOGLE_DRIVE_WEB_APP_URL }}
 
       - name: Build Angular app
         run: npm run build

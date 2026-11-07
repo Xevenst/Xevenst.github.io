@@ -1,7 +1,8 @@
 import { AppEnvironment } from './environment.model';
-import { firebaseConfig } from './firebase-config';
+import { firebaseConfig, googleDriveWebAppUrl } from './firebase-config';
 
 export const environment: AppEnvironment = {
   production: true,
   firebase: firebaseConfig,
+  googleDriveWebAppUrl,
 };

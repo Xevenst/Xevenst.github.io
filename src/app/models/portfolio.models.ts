@@ -94,11 +94,12 @@ export interface AuthUser {
 export interface StoredFile {
   id: string;
   name: string;
-  path: string;
+  driveFileId: string;
   contentType: string;
   size: number;
   downloadUrl: string;
   uploadedAt: string;
+  visibility: 'private' | 'public';
 }
 
 export interface DiaryEntry {

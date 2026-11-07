@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { ChangeDetectorRef, Component, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
@@ -19,9 +20,15 @@ export class PortfolioComponent {
   loading = true;
   dataSource = 'local';
   dataError: string | null = null;
+  loadError: string | null = null;
   content: PortfolioPageContent = DEFAULT_PORTFOLIO_CONTENT;
   readonly user$;
-  constructor(private readonly database: DatabaseService, private readonly auth: AuthService) {
+  constructor(
+    private readonly database: DatabaseService,
+    private readonly auth: AuthService,
+    private readonly changeDetector: ChangeDetectorRef,
+    @Inject(PLATFORM_ID) private readonly platformId: object,
+  ) {
     this.user$ = auth.user$;
   }
 
@@ -46,15 +53,21 @@ export class PortfolioComponent {
   }
 
   async ngOnInit(): Promise<void> {
-    [this.projects, this.content] = await Promise.all([
-      this.database.getProjects(),
-      this.database.getPortfolioPageContent(),
-    ]);
-    this.dataSource = this.database.source;
-    this.dataError = this.database.error;
-    this.loading = false;
-    if (this.auth.currentUser) {
-      await this.loadBookmarks();
+    if (!isPlatformBrowser(this.platformId)) return;
+    try {
+      [this.projects, this.content] = await Promise.all([
+        this.database.getProjects(),
+        this.database.getPortfolioPageContent(),
+      ]);
+      this.dataSource = this.database.source;
+      if (this.auth.currentUser) {
+        await this.loadBookmarks();
+      }
+    } catch (error: unknown) {
+      this.loadError = error instanceof Error ? error.message : 'Portfolio content could not be loaded from Firebase.';
+    } finally {
+      this.loading = false;
+      this.changeDetector.markForCheck();
     }
   }
 

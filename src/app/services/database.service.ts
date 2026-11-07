@@ -8,7 +8,6 @@ import {
   getDocs,
   setDoc,
 } from 'firebase/firestore';
-import { PORTFOLIO_PROJECTS } from '../data/portfolio.data';
 import { DEFAULT_ABOUT_CONTENT, DEFAULT_PORTFOLIO_CONTENT } from '../data/site-copy.data';
 import { AboutPageContent, PortfolioPageContent, PortfolioProject } from '../models/portfolio.models';
 import { AuthService } from './auth.service';
@@ -34,32 +33,29 @@ export class DatabaseService {
 
   async getProjects(): Promise<PortfolioProject[]> {
     this.errorSubject.next(null);
-    const database = this.authService.database;
-    if (!database) {
-      this.sourceSubject.next('local');
-      return PORTFOLIO_PROJECTS;
-    }
     try {
+      const database = this.requireDatabase();
       const snapshot = await getDocs(collection(database, 'portfolio_projects'));
       const projects = snapshot.docs
         .map((item) => item.data())
         .filter((value): value is PortfolioProject => this.isPortfolioProject(value));
-      this.sourceSubject.next(projects.length > 0 ? 'firebase' : 'local');
-      return projects.length > 0 ? projects : PORTFOLIO_PROJECTS;
+      this.sourceSubject.next('firebase');
+      return projects;
     } catch (error: unknown) {
-      this.errorSubject.next(error instanceof Error ? error.message : 'Firebase data could not be loaded.');
-      this.sourceSubject.next('local');
-      return PORTFOLIO_PROJECTS;
+      const message = error instanceof Error ? error.message : 'Firebase projects could not be loaded.';
+      this.errorSubject.next(message);
+      throw new Error(message);
     }
   }
 
   async getAboutContent(): Promise<AboutPageContent> {
     this.errorSubject.next(null);
-    const database = this.authService.database;
-    if (!database) return DEFAULT_ABOUT_CONTENT;
     try {
+      const database = this.requireDatabase();
       const snapshot = await getDoc(doc(database, 'site_content', 'about'));
-      if (!snapshot.exists()) return DEFAULT_ABOUT_CONTENT;
+      if (!snapshot.exists()) {
+        throw new Error('The Firebase document site_content/about is missing. Save About page copy from the admin panel.');
+      }
       const value = snapshot.data();
       if (!this.isStringRecord(value, DEFAULT_ABOUT_CONTENT)) {
         throw new Error('The About page content in Firebase is incomplete or invalid.');
@@ -67,7 +63,7 @@ export class DatabaseService {
       return value;
     } catch (error: unknown) {
       this.errorSubject.next(error instanceof Error ? error.message : 'About page content could not be loaded.');
-      return DEFAULT_ABOUT_CONTENT;
+      throw error;
     }
   }
 
@@ -78,11 +74,12 @@ export class DatabaseService {
 
   async getPortfolioPageContent(): Promise<PortfolioPageContent> {
     this.errorSubject.next(null);
-    const database = this.authService.database;
-    if (!database) return DEFAULT_PORTFOLIO_CONTENT;
     try {
+      const database = this.requireDatabase();
       const snapshot = await getDoc(doc(database, 'site_content', 'portfolio'));
-      if (!snapshot.exists()) return DEFAULT_PORTFOLIO_CONTENT;
+      if (!snapshot.exists()) {
+        throw new Error('The Firebase document site_content/portfolio is missing. Save Portfolio page copy from the admin panel.');
+      }
       const value = snapshot.data();
       if (!this.isStringRecord(value, DEFAULT_PORTFOLIO_CONTENT)) {
         throw new Error('The Portfolio page content in Firebase is incomplete or invalid.');
@@ -90,7 +87,7 @@ export class DatabaseService {
       return value;
     } catch (error: unknown) {
       this.errorSubject.next(error instanceof Error ? error.message : 'Portfolio page content could not be loaded.');
-      return DEFAULT_PORTFOLIO_CONTENT;
+      throw error;
     }
   }
 
@@ -125,7 +122,7 @@ export class DatabaseService {
   }
 
   private requireDatabase() {
-    if (!this.authService.database) throw new Error('The database is not configured.');
+    if (!this.authService.database) throw new Error('Firebase is not configured for this deployment.');
     return this.authService.database;
   }
 

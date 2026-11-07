@@ -11,4 +11,5 @@ export interface FirebaseEnvironmentConfig {
 export interface AppEnvironment {
   production: boolean;
   firebase?: FirebaseEnvironmentConfig;
+  googleDriveWebAppUrl?: string;
 }

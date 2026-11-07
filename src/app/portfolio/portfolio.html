@@ -1,10 +1,11 @@
-<div class="portfolio page-shell">
+<p *ngIf="loading" class="notice">Loading portfolio from Firebase…</p>
+<p *ngIf="loadError" class="notice notice-error">{{ loadError }}</p>
+<div *ngIf="!loading && !loadError" class="portfolio page-shell">
   <header class="portfolio-header">
     <div><p class="eyebrow"><span class="eyebrow-line"></span> {{ content.eyebrow }}</p><h1>{{ content.title }}<br /><em>{{ content.titleAccent }}</em></h1></div>
     <p class="portfolio-intro">{{ content.introduction }}</p>
   </header>
   <div class="portfolio-status"><span><i></i> {{ projects.length }} {{ content.projectCountLabel }}</span><span>{{ content.dataLabel }} {{ dataSource }}</span><a *ngIf="!(user$ | async)" routerLink="/login">{{ content.signInToSaveLabel }}</a><a *ngIf="user$ | async" routerLink="/account">{{ content.viewSavedLabel }}</a></div>
-  <p *ngIf="loading" class="notice">{{ content.loadingLabel }}</p>
   <p *ngIf="dataError" class="notice notice-error">{{ dataError }}</p>
   <div class="portfolio-grid">
     <article class="portfolio-card" *ngFor="let project of projects; let index = index" [style.--project-accent]="project.accent">

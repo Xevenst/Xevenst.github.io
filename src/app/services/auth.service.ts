@@ -14,7 +14,6 @@ import {
   signOut as firebaseSignOut,
 } from 'firebase/auth';
 import { Firestore, getFirestore } from 'firebase/firestore';
-import { FirebaseStorage, getStorage } from 'firebase/storage';
 import { environment } from '../../environments/environment';
 import { AuthUser } from '../models/portfolio.models';
 
@@ -29,7 +28,6 @@ export class AuthService {
   private readonly adminSubject = new BehaviorSubject<boolean>(false);
   private readonly auth: Auth | null;
   private readonly firestore: Firestore | null;
-  private readonly storage: FirebaseStorage | null;
 
   readonly user$ = this.userSubject.asObservable();
   readonly error$ = this.errorSubject.asObservable();
@@ -41,7 +39,6 @@ export class AuthService {
     if (!isPlatformBrowser(platformId)) {
       this.auth = null;
       this.firestore = null;
-      this.storage = null;
       this.configStateSubject.next('unavailable');
       this.loadingSubject.next(false);
       return;
@@ -51,7 +48,6 @@ export class AuthService {
     if (!config || !Object.values(config).every((value) => value.trim().length > 0)) {
       this.auth = null;
       this.firestore = null;
-      this.storage = null;
       this.loadingSubject.next(false);
       return;
     }
@@ -60,13 +56,11 @@ export class AuthService {
       const app: FirebaseApp = getApps().length > 0 ? getApps()[0] : initializeApp(config);
       this.auth = getAuth(app);
       this.firestore = getFirestore(app);
-      this.storage = getStorage(app);
       this.configStateSubject.next('configured');
       onAuthStateChanged(this.auth, (user) => void this.handleUser(user));
     } catch (error: unknown) {
       this.auth = null;
       this.firestore = null;
-      this.storage = null;
       this.loadingSubject.next(false);
       this.errorSubject.next(this.describeError(error, 'Firebase could not be initialized.'));
     }
@@ -123,10 +117,6 @@ export class AuthService {
 
   get database(): Firestore | null {
     return this.firestore;
-  }
-
-  get fileStorage(): FirebaseStorage | null {
-    return this.storage;
   }
 
   get isAdmin(): boolean {
