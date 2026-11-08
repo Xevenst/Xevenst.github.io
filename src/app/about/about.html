@@ -1,11 +1,11 @@
-<p *ngIf="loading && !contentAvailable" class="content-loading">Loading About page from Firebase…</p>
 <p *ngIf="contentError" class="content-error">{{ contentError }}</p>
-<div *ngIf="contentAvailable" class="about page-shell">
+<ng-container *ngIf="contentAvailable; else aboutLoading">
+<div class="about page-shell">
   <header class="about-header">
     <p class="eyebrow"><span class="eyebrow-line"></span> {{ content.heroEyebrow }}</p>
     <h1>{{ content.heroTitle }}<br /><em>{{ content.heroAccent }}</em></h1>
-    <p class="about-lede">{{ content.heroBiography }}</p>
-    <p class="about-lede">{{ content.heroRole }}</p>
+    <p class="about-lede preserve-line-breaks">{{ content.heroBiography }}</p>
+    <p class="about-lede preserve-line-breaks">{{ content.heroRole }}</p>
   </header>
 
   <section class="about-highlights" [attr.aria-label]="content.highlightsLabel">
@@ -13,31 +13,44 @@
       <strong>{{ highlight.value }}</strong>
       <span>{{ highlight.label }}</span>
     </div>
-    <p>{{ content.highlightNote }}</p>
+    <p class="preserve-line-breaks">{{ content.highlightNote }}</p>
   </section>
 
   <div class="about-layout">
     <aside class="about-index">
       <span>{{ content.onThisPageLabel }}</span>
       <a routerLink="/about" fragment="introduction">01 / {{ content.navIntroduction }}</a>
-      <a routerLink="/about" fragment="selected-work">02 / {{ content.navWork }}</a>
-      <a routerLink="/about" fragment="education">03 / {{ content.navEducation }}</a>
-      <a routerLink="/about" fragment="experience">04 / {{ content.navExperience }}</a>
-      <a routerLink="/about" fragment="community">05 / {{ content.navCommunity }}</a>
-      <a routerLink="/about" fragment="toolkit">06 / {{ content.navToolkit }}</a>
+      <a routerLink="/about" fragment="experience">02 / {{ content.navExperience }}</a>
+      <a routerLink="/about" fragment="selected-work">03 / {{ content.navWork }}</a>
+      <a routerLink="/about" fragment="education">04 / {{ content.navEducation }}</a>
+      <a routerLink="/about" fragment="toolkit">05 / {{ content.navToolkit }}</a>
+      <a routerLink="/about" fragment="community">06 / {{ content.navCommunity }}</a>
     </aside>
     <div class="about-content">
-      <section id="introduction" class="about-block">
-        <p class="block-number">01</p>
+      <section class="about-block">
+        <p id="introduction" class="block-number">01</p>
         <div>
           <h2>{{ content.introductionHeading }}</h2>
-          <p class="about-copy">{{ content.introductionCopy }}</p>
+          <p class="about-copy preserve-line-breaks">{{ content.introductionCopy }}</p>
           <p class="about-availability"><i></i> {{ content.availability }}</p>
         </div>
       </section>
 
-      <section id="selected-work" class="about-block">
-        <p class="block-number">02</p>
+      <section class="about-block">
+        <p id="experience" class="block-number">02</p>
+        <div>
+          <h2>{{ content.experienceHeading }}</h2>
+          <article class="timeline-item" *ngFor="let item of experienceItems">
+            <div class="timeline-date">{{ item.date }}</div>
+            <h3>{{ item.company }}</h3>
+            <p class="role">{{ item.role }}</p>
+            <p class="preserve-line-breaks">{{ item.description }}</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="about-block">
+        <p id="selected-work" class="block-number">03</p>
         <div>
           <div class="about-section-heading">
             <div>
@@ -55,7 +68,7 @@
               </div>
               <p class="card-kicker">{{ project.type }}</p>
               <h3>{{ project.title }}</h3>
-              <p>{{ project.summary }}</p>
+              <p class="preserve-line-breaks">{{ project.summary }}</p>
               <a class="about-project-link" [href]="project.githubUrl" target="_blank" rel="noreferrer">
                 {{ content.openGithubLabel }} <span aria-hidden="true">↗</span>
               </a>
@@ -64,8 +77,8 @@
         </div>
       </section>
 
-      <section id="education" class="about-block">
-        <p class="block-number">03</p>
+      <section class="about-block">
+        <p id="education" class="block-number">04</p>
         <div>
           <h2>{{ content.educationHeading }}</h2>
           <div class="feature-note">
@@ -76,35 +89,8 @@
         </div>
       </section>
 
-      <section id="experience" class="about-block">
-        <p class="block-number">04</p>
-        <div>
-          <h2>{{ content.experienceHeading }}</h2>
-          <article class="timeline-item" *ngFor="let item of experienceItems">
-            <div class="timeline-date">{{ item.date }}</div>
-            <h3>{{ item.company }}</h3>
-            <p class="role">{{ item.role }}</p>
-            <p>{{ item.description }}</p>
-          </article>
-        </div>
-      </section>
-
-      <section id="community" class="about-block">
-        <p class="block-number">05</p>
-        <div>
-          <h2>{{ content.communityHeading }}</h2>
-          <div class="community-list">
-            <article *ngFor="let item of communityItems">
-              <h3>{{ item.title }}</h3>
-              <span>{{ item.date }}</span>
-              <p>{{ item.description }}</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="toolkit" class="about-block">
-        <p class="block-number">06</p>
+      <section class="about-block">
+        <p id="toolkit" class="block-number">05</p>
         <div>
           <h2>{{ content.toolkitHeading }}</h2>
           <div class="tag-cloud">
@@ -116,10 +102,25 @@
           </div>
           <div class="courses">
             <h3>{{ content.coursesHeading }}</h3>
-            <p>{{ content.courses }}</p>
+            <p class="preserve-line-breaks">{{ content.courses }}</p>
           </div>
         </div>
       </section>
+
+      <section class="about-block">
+        <p id="community" class="block-number">06</p>
+        <div>
+          <h2>{{ content.communityHeading }}</h2>
+          <div class="community-list">
+            <article *ngFor="let item of communityItems">
+              <h3>{{ item.title }}</h3>
+              <span>{{ item.date }}</span>
+              <p class="preserve-line-breaks">{{ item.description }}</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
     </div>
   </div>
 
@@ -129,3 +130,7 @@
     <a [href]="'mailto:' + content.contactEmail">{{ content.contactButton }} <span aria-hidden="true">↗</span></a>
   </section>
 </div>
+</ng-container>
+<ng-template #aboutLoading>
+  <p *ngIf="loading" class="content-loading">Loading About page from Firebase…</p>
+</ng-template>

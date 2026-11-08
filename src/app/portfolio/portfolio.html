@@ -1,9 +1,9 @@
-<p *ngIf="loading" class="notice">Loading portfolio from Firebase…</p>
 <p *ngIf="loadError" class="notice notice-error">{{ loadError }}</p>
-<div *ngIf="!loading && !loadError" class="portfolio page-shell">
+<ng-container *ngIf="contentAvailable; else portfolioLoading">
+<div class="portfolio page-shell">
   <header class="portfolio-header">
     <div><p class="eyebrow"><span class="eyebrow-line"></span> {{ content.eyebrow }}</p><h1>{{ content.title }}<br /><em>{{ content.titleAccent }}</em></h1></div>
-    <p class="portfolio-intro">{{ content.introduction }}</p>
+    <p class="portfolio-intro preserve-line-breaks">{{ content.introduction }}</p>
   </header>
   <div class="portfolio-status"><span><i></i> {{ projects.length }} {{ content.projectCountLabel }}</span><span>{{ content.dataLabel }} {{ dataSource }}</span><a *ngIf="!(user$ | async)" routerLink="/login">{{ content.signInToSaveLabel }}</a><a *ngIf="user$ | async" routerLink="/account">{{ content.viewSavedLabel }}</a></div>
   <p *ngIf="dataError" class="notice notice-error">{{ dataError }}</p>
@@ -11,8 +11,8 @@
     <article class="portfolio-card" *ngFor="let project of projects; let index = index" [style.--project-accent]="project.accent">
       <div class="portfolio-card-top"><span>0{{ index + 1 }} / {{ project.year }}</span><button type="button" (click)="toggleBookmark(project)" [attr.aria-label]="isSaved(project.id) ? content.removeBookmarkLabel : content.saveProjectLabel" [class.saved]="isSaved(project.id)">{{ isSaved(project.id) ? '★' : '☆' }}</button></div>
       <div class="portfolio-art"><span>{{ project.title.split(' ')[0] }}</span><b>{{ project.year }}</b></div>
-      <p class="card-kicker">{{ project.type }}</p><h2>{{ project.title }}</h2><p>{{ project.summary }}</p>
-      <p class="details">{{ project.details }}</p>
+      <p class="card-kicker">{{ project.type }}</p><h2>{{ project.title }}</h2><p class="preserve-line-breaks">{{ project.summary }}</p>
+      <p class="details preserve-line-breaks">{{ project.details }}</p>
       <div class="technology-list"><span *ngFor="let technology of project.technologies">{{ technology }}</span></div>
       <a class="portfolio-action-link" [href]="project.githubUrl" target="_blank" rel="noreferrer">{{ content.openGithubLabel }} <span>↗</span></a>
     </article>
@@ -35,3 +35,7 @@
     </div>
   </section>
 </div>
+</ng-container>
+<ng-template #portfolioLoading>
+  <p *ngIf="loading" class="notice">Loading portfolio from Firebase…</p>
+</ng-template>
