@@ -1,26 +1,28 @@
 import { PortfolioProject } from '../models/portfolio.models';
-import { mergeFeaturedProjects } from './github-projects.service';
+import { selectPinnedPublicProjects } from './github-projects.service';
 
-describe('mergeFeaturedProjects', () => {
-  const project = (id: string, githubUrl: string): PortfolioProject => ({
-    id,
-    title: id,
+describe('selectPinnedPublicProjects', () => {
+  const project = (name: string): PortfolioProject => ({
+    id: `github-${name.toLowerCase()}`,
+    title: name,
     year: '2024',
     type: 'Project',
     summary: '',
     details: '',
     technologies: [],
-    githubUrl,
+    githubUrl: `https://github.com/Xevenst/${name}`,
     featured: true,
     accent: '#000000',
   });
 
-  it('keeps the curated project and omits its duplicate from GitHub results', () => {
-    const curated = project('curated', 'https://github.com/Xevenst/Split-Bill-Mobile-App');
-    const duplicate = project('github-copy', 'https://github.com/xevenst/split-bill-mobile-app/');
-    const githubOnly = project('github-only', 'https://github.com/Xevenst/New-Project');
+  it('returns only public pinned repositories in profile order', () => {
+    const pinned = [
+      project('Split-Bill-Mobile-App'),
+      project('Chromesthesia'),
+      project('DataScienceProject'),
+    ];
 
-    expect(mergeFeaturedProjects([curated], [duplicate, githubOnly]))
-      .toEqual([curated, githubOnly]);
+    expect(selectPinnedPublicProjects(pinned).map(({ title }) => title))
+      .toEqual(['Chromesthesia', 'DataScienceProject', 'Split-Bill-Mobile-App']);
   });
 });

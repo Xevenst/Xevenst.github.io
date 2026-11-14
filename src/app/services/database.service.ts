@@ -56,7 +56,7 @@ export class DatabaseService {
       if (!snapshot.exists()) {
         throw new Error('The Firebase document site_content/about is missing. Save About page copy from the admin panel.');
       }
-      const value = snapshot.data();
+      const value = { ...DEFAULT_ABOUT_CONTENT, ...snapshot.data() };
       if (!this.isStringRecord(value, DEFAULT_ABOUT_CONTENT)) {
         throw new Error('The About page content in Firebase is incomplete or invalid.');
       }

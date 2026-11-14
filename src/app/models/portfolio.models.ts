@@ -17,6 +17,7 @@ export interface AboutPageContent {
   heroAccent: string;
   heroBiography: string;
   heroRole: string;
+  heroImageUrl: string;
   highlightOneValue: string;
   highlightOneLabel: string;
   highlightTwoValue: string;
@@ -32,6 +33,7 @@ export interface AboutPageContent {
   navExperience: string;
   navCommunity: string;
   navToolkit: string;
+  navHobbies: string;
   introductionHeading: string;
   introductionCopy: string;
   availability: string;
@@ -54,6 +56,9 @@ export interface AboutPageContent {
   languages: string;
   coursesHeading: string;
   courses: string;
+  hobbiesHeading: string;
+  hobbiesDescription: string;
+  hobbiesImageUrl: string;
   contactEyebrow: string;
   contactTitle: string;
   contactAccent: string;

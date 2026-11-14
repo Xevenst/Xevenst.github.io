@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { DEFAULT_ABOUT_CONTENT } from '../data/site-copy.data';
 import { AboutPageContent, PortfolioProject } from '../models/portfolio.models';
 import { DatabaseService } from '../services/database.service';
-import { GitHubProjectsService, mergeFeaturedProjects } from '../services/github-projects.service';
+import { GitHubProjectsService, selectPinnedPublicProjects } from '../services/github-projects.service';
 
 @Component({
   selector: 'app-about',
@@ -16,7 +16,9 @@ import { GitHubProjectsService, mergeFeaturedProjects } from '../services/github
 })
 export class AboutComponent {
   content: AboutPageContent = DEFAULT_ABOUT_CONTENT;
-  featuredProjects: PortfolioProject[] = [];
+  pinnedProjects: PortfolioProject[] = [];
+  publicProjects: PortfolioProject[] = [];
+  showAllProjects = false;
   contentError: string | null = null;
   projectError: string | null = null;
   contentAvailable = false;
@@ -40,9 +42,8 @@ export class AboutComponent {
       this.changeDetector.markForCheck();
     }
 
-    const [contentResult, curatedProjectsResult, githubProjectsResult] = await Promise.allSettled([
+    const [contentResult, githubProjectsResult] = await Promise.allSettled([
       this.withTimeout(this.database.getAboutContent(), 'Timed out loading About content from Firebase.'),
-      this.withTimeout(this.database.getProjects(), 'Timed out loading featured projects from Firebase.'),
       this.withTimeout(this.githubProjects.getPublicProjects(), 'Timed out loading public GitHub projects.'),
     ]);
 
@@ -57,25 +58,33 @@ export class AboutComponent {
         : error;
     }
 
-    const curatedProjects = curatedProjectsResult.status === 'fulfilled'
-      ? curatedProjectsResult.value.filter((project) => project.featured)
-      : [];
-    const githubProjects = githubProjectsResult.status === 'fulfilled'
-      ? githubProjectsResult.value
-      : [];
-    this.featuredProjects = mergeFeaturedProjects(curatedProjects, githubProjects);
-
-    const projectErrors = [
-      ...(curatedProjectsResult.status === 'rejected'
-        ? [this.errorMessage(curatedProjectsResult.reason, 'Featured Firebase projects could not be loaded.')]
-        : []),
-      ...(githubProjectsResult.status === 'rejected'
-        ? [this.errorMessage(githubProjectsResult.reason, 'Public GitHub projects could not be loaded.')]
-        : []),
-    ];
-    this.projectError = projectErrors.length ? projectErrors.join(' ') : null;
+    if (githubProjectsResult.status === 'fulfilled') {
+      this.publicProjects = githubProjectsResult.value;
+      this.pinnedProjects = selectPinnedPublicProjects(this.publicProjects);
+    } else {
+      this.projectError = this.errorMessage(
+        githubProjectsResult.reason,
+        'Public GitHub projects could not be loaded.',
+      );
+    }
     this.loading = false;
     this.changeDetector.markForCheck();
+  }
+
+  get visibleProjects(): PortfolioProject[] {
+    return this.showAllProjects ? this.publicProjects : this.pinnedProjects;
+  }
+
+  toggleProjects(): void {
+    this.showAllProjects = !this.showAllProjects;
+  }
+
+  get heroPhotoUrl(): string {
+    return toDriveImageUrl(this.content.heroImageUrl);
+  }
+
+  get hobbiesPhotoUrl(): string {
+    return toDriveImageUrl(this.content.hobbiesImageUrl);
   }
 
   get highlights(): { value: string; label: string }[] {
@@ -119,7 +128,10 @@ export class AboutComponent {
       const stored = window.localStorage.getItem(this.contentCacheKey);
       if (!stored) return null;
       const parsed: unknown = JSON.parse(stored);
-      if (this.isAboutContent(parsed)) return parsed;
+      if (typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)) {
+        const content = { ...DEFAULT_ABOUT_CONTENT, ...parsed };
+        if (this.isAboutContent(content)) return content;
+      }
       window.localStorage.removeItem(this.contentCacheKey);
     } catch (error: unknown) {
       console.warn('The saved About page copy could not be read from this browser.', error);
@@ -155,5 +167,18 @@ export class AboutComponent {
         },
       );
     });
+  }
+}
+
+function toDriveImageUrl(value: string): string {
+  try {
+    const url = new URL(value);
+    if (url.hostname.toLowerCase() !== 'drive.google.com') return value;
+    const fileId = url.pathname.match(/^\/file\/d\/([^/]+)/)?.[1] ?? url.searchParams.get('id');
+    return fileId
+      ? `https://drive.google.com/thumbnail?id=${encodeURIComponent(fileId)}&sz=w1600`
+      : value;
+  } catch {
+    return value;
   }
 }

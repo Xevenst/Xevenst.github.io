@@ -2,10 +2,16 @@
 <ng-container *ngIf="contentAvailable; else aboutLoading">
 <div class="about page-shell">
   <header class="about-header">
-    <p class="eyebrow"><span class="eyebrow-line"></span> {{ content.heroEyebrow }}</p>
-    <h1>{{ content.heroTitle }}<br /><em>{{ content.heroAccent }}</em></h1>
-    <p class="about-lede preserve-line-breaks">{{ content.heroBiography }}</p>
-    <p class="about-lede preserve-line-breaks">{{ content.heroRole }}</p>
+    <div class="about-hero-copy">
+      <p class="eyebrow"><span class="eyebrow-line"></span> {{ content.heroEyebrow }}</p>
+      <h1>{{ content.heroTitle }}<br /><em>{{ content.heroAccent }}</em></h1>
+      <p class="about-lede preserve-line-breaks">{{ content.heroBiography }}</p>
+      <p class="about-lede preserve-line-breaks">{{ content.heroRole }}</p>
+    </div>
+    <div class="about-photo-frame about-hero-photo">
+      <img *ngIf="content.heroImageUrl; else heroPhotoPlaceholder" [src]="heroPhotoUrl" [alt]="content.heroTitle" fetchpriority="high">
+      <ng-template #heroPhotoPlaceholder><span>About photo will appear here</span></ng-template>
+    </div>
   </header>
 
   <section class="about-highlights" [attr.aria-label]="content.highlightsLabel">
@@ -25,6 +31,7 @@
       <a routerLink="/about" fragment="education">04 / {{ content.navEducation }}</a>
       <a routerLink="/about" fragment="toolkit">05 / {{ content.navToolkit }}</a>
       <a routerLink="/about" fragment="community">06 / {{ content.navCommunity }}</a>
+      <a routerLink="/about" fragment="hobbies">07 / {{ content.navHobbies }}</a>
     </aside>
     <div class="about-content">
       <section class="about-block">
@@ -57,11 +64,10 @@
               <p class="eyebrow">{{ content.selectedWorkEyebrow }}</p>
               <h2>{{ content.selectedWorkHeading }} <em>{{ content.selectedWorkAccent }}</em></h2>
             </div>
-            <a routerLink="/portfolio">{{ content.viewAllLabel }} <span aria-hidden="true">↗</span></a>
           </div>
           <p *ngIf="projectError" class="content-error">{{ projectError }}</p>
           <div class="about-project-grid">
-            <article class="about-project" *ngFor="let project of featuredProjects; let index = index">
+            <article class="about-project" *ngFor="let project of visibleProjects; let index = index">
               <span class="about-project-number">0{{ index + 1 }} / {{ project.year }}</span>
               <div class="about-project-art" [style.--project-accent]="project.accent">
                 <span>{{ project.title.split(' ')[0] }}</span>
@@ -73,6 +79,12 @@
                 {{ content.openGithubLabel }} <span aria-hidden="true">↗</span>
               </a>
             </article>
+          </div>
+          <div class="about-project-toggle-wrap">
+            <button type="button" class="about-project-toggle" [attr.aria-expanded]="showAllProjects" (click)="toggleProjects()">
+              {{ showAllProjects ? 'Show pinned' : content.viewAllLabel }}
+              <span aria-hidden="true">{{ showAllProjects ? '↗' : '↓' }}</span>
+            </button>
           </div>
         </div>
       </section>
@@ -121,13 +133,28 @@
         </div>
       </section>
 
+      <section class="about-block">
+        <p id="hobbies" class="block-number">07</p>
+        <div>
+          <h2>{{ content.hobbiesHeading }}</h2>
+          <p *ngIf="content.hobbiesDescription" class="about-copy preserve-line-breaks">{{ content.hobbiesDescription }}</p>
+          <div class="about-photo-frame about-hobby-photo">
+            <img *ngIf="content.hobbiesImageUrl; else hobbiesPhotoPlaceholder" [src]="hobbiesPhotoUrl" [alt]="content.hobbiesHeading" loading="lazy">
+            <ng-template #hobbiesPhotoPlaceholder><span>Hobbies photo will appear here</span></ng-template>
+          </div>
+        </div>
+      </section>
+
     </div>
   </div>
 
   <section class="about-contact">
     <p class="eyebrow">{{ content.contactEyebrow }}</p>
     <h2>{{ content.contactTitle }} <em>{{ content.contactAccent }}</em></h2>
-    <a [href]="'mailto:' + content.contactEmail">{{ content.contactButton }} <span aria-hidden="true">↗</span></a>
+    <details class="about-contact-action">
+      <summary>{{ content.contactButton }} <span aria-hidden="true">↗</span></summary>
+      <span id="about-contact-popup" class="about-contact-tooltip">Contact: <a [href]="'mailto:' + content.contactEmail">{{ content.contactEmail }}</a></span>
+    </details>
   </section>
 </div>
 </ng-container>

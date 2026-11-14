@@ -9,8 +9,15 @@ interface GitHubRepository {
   description: string | null;
   language: string | null;
   created_at: string;
-  fork: boolean;
 }
+
+const PINNED_GITHUB_REPOSITORIES = [
+  'Chromesthesia',
+  'DataScienceProject',
+  'MovLensDataSet',
+  'Split-Bill-Mobile-App',
+  'Xevenst.github.io',
+];
 
 @Injectable({ providedIn: 'root' })
 export class GitHubProjectsService {
@@ -25,45 +32,35 @@ export class GitHubProjectsService {
       ),
     );
 
-    return repositories
-      .filter((repository) => !repository.fork)
-      .map((repository, index) => ({
-        id: `github-${repository.name.toLowerCase()}`,
-        title: repository.name.replace(/[-_]/g, ' '),
-        year: repository.created_at.slice(0, 4),
-        type: repository.language ?? 'GitHub project',
-        summary: repository.description ?? `A public ${repository.language ?? 'software'} project on GitHub.`,
-        details: repository.description ?? `Explore the source code and project details in the public GitHub repository.`,
-        technologies: repository.language ? [repository.language] : [],
-        githubUrl: repository.html_url,
-        featured: true,
-        accent: this.colors[index % this.colors.length],
-      }));
+    return repositories.map((repository, index) => ({
+      id: `github-${repository.name.toLowerCase()}`,
+      title: repository.name.replace(/[-_]/g, ' '),
+      year: repository.created_at.slice(0, 4),
+      type: repository.language ?? 'GitHub project',
+      summary: repository.description ?? `A public ${repository.language ?? 'software'} project on GitHub.`,
+      details: repository.description ?? 'Explore the source code and project details in the public GitHub repository.',
+      technologies: repository.language ? [repository.language] : [],
+      githubUrl: repository.html_url,
+      featured: true,
+      accent: this.colors[index % this.colors.length],
+    }));
   }
 }
 
-export function mergeFeaturedProjects(
-  curatedProjects: PortfolioProject[],
-  githubProjects: PortfolioProject[],
-): PortfolioProject[] {
-  const projects: PortfolioProject[] = [];
-  const seenRepositories = new Set<string>();
-
-  for (const project of [...curatedProjects, ...githubProjects]) {
-    const repository = normalizeRepositoryUrl(project.githubUrl);
-    if (repository && seenRepositories.has(repository)) continue;
-    if (repository) seenRepositories.add(repository);
-    projects.push(project);
-  }
-
-  return projects;
+export function selectPinnedPublicProjects(projects: PortfolioProject[]): PortfolioProject[] {
+  const projectsByRepository = new Map(
+    projects.map((project) => [repositoryName(project.githubUrl), project]),
+  );
+  return PINNED_GITHUB_REPOSITORIES
+    .map((repository) => projectsByRepository.get(repository.toLowerCase()))
+    .filter((project): project is PortfolioProject => project !== undefined);
 }
 
-function normalizeRepositoryUrl(value: string): string {
+function repositoryName(value: string): string {
   try {
     const url = new URL(value);
     if (url.hostname.toLowerCase() !== 'github.com') return '';
-    return `${url.hostname.toLowerCase()}${url.pathname.replace(/\.git\/?$/, '').replace(/\/+$/, '').toLowerCase()}`;
+    return url.pathname.split('/').filter(Boolean).at(-1)?.toLowerCase() ?? '';
   } catch {
     return '';
   }
