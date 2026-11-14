@@ -49,7 +49,7 @@ em { color: var(--accent-color); font-family: var(--font-serif); font-weight: 40
 .about .about-project-toggle { padding: .9rem 1.5rem; border: 0; background: var(--accent-color); color: var(--bg-primary); font: 500 .78rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
 .about .about-header { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(240px, .65fr); align-items: center; gap: clamp(2rem, 5vw, 5rem); }
 .about .about-photo-frame { display: grid; min-height: 12rem; place-items: center; overflow: hidden; border: 1px dashed var(--border-color); background: var(--surface); color: var(--text-muted); font: .7rem var(--font-mono); letter-spacing: .06em; text-align: center; text-transform: uppercase; }
-.about .about-photo-frame img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.about .about-photo-frame img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .about .about-hero-photo { aspect-ratio: 4 / 5; }
 .about .about-hobby-photo { aspect-ratio: 4 / 3; margin-top: 1rem; }
 
