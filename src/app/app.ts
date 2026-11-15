@@ -11,8 +11,6 @@ import { NavbarComponent } from './shared/navbar/navbar';
   styleUrl: './app.scss',
 })
 export class App {
-  public currentYear = new Date().getFullYear();
-
   constructor(viewportScroller: ViewportScroller) {
     viewportScroller.setOffset(() => [
       0,

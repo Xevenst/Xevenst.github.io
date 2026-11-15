@@ -36,6 +36,17 @@ npm start
 Do not paste the values into chat or commit the generated config. Without generating it, a fresh
 local checkout uses the unconfigured Firebase fallback.
 
+## About page route
+
+The About page shows a compact Surabaya-to-Taipei route illustration and links to Google Maps
+for travel options. No Google Maps API key or Google Cloud billing is required.
+
+## Featured project images
+
+The About page uses local preview images in `public/assets/project-previews/`, mapped by
+repository name in `src/app/services/github-projects.service.ts`. Replace those files to update
+the screenshots; no changes to the individual project repositories are needed.
+
 ## Google Drive file uploads
 
 The admin file manager uploads file contents to a fixed folder in your Google Drive. Firestore

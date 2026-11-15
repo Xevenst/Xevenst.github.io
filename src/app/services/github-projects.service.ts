@@ -9,6 +9,7 @@ interface GitHubRepository {
   description: string | null;
   language: string | null;
   created_at: string;
+  default_branch: string;
 }
 
 const PINNED_GITHUB_REPOSITORIES = [
@@ -18,6 +19,12 @@ const PINNED_GITHUB_REPOSITORIES = [
   'Split-Bill-Mobile-App',
   'Xevenst.github.io',
 ];
+
+const PROJECT_PREVIEW_IMAGES: Record<string, string> = {
+  chromesthesia: '/assets/project-previews/chromesthesia.png',
+  movlensdataset: '/assets/project-previews/movlens-dataset.png',
+  'split-bill-mobile-app': '/assets/project-previews/split-bill-mobile-app.png',
+};
 
 @Injectable({ providedIn: 'root' })
 export class GitHubProjectsService {
@@ -41,6 +48,7 @@ export class GitHubProjectsService {
       details: repository.description ?? 'Explore the source code and project details in the public GitHub repository.',
       technologies: repository.language ? [repository.language] : [],
       githubUrl: repository.html_url,
+      imageUrl: PROJECT_PREVIEW_IMAGES[repository.name.toLowerCase()],
       featured: true,
       accent: this.colors[index % this.colors.length],
     }));

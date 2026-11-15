@@ -7,6 +7,7 @@ export interface PortfolioProject {
   details: string;
   technologies: string[];
   githubUrl: string;
+  imageUrl?: string;
   featured: boolean;
   accent: string;
 }

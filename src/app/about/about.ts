@@ -19,9 +19,10 @@ export class AboutComponent {
   pinnedProjects: PortfolioProject[] = [];
   publicProjects: PortfolioProject[] = [];
   showAllProjects = false;
+  failedProjectImageIds = new Set<string>();
   contentError: string | null = null;
   projectError: string | null = null;
-  contentAvailable = false;
+  contentAvailable = true;
   loading = true;
   private readonly contentCacheKey = 'xevenst-about-content-v1';
 
@@ -55,7 +56,7 @@ export class AboutComponent {
       const error = this.errorMessage(contentResult.reason, 'About page content could not be loaded from Firebase.');
       this.contentError = cachedContent
         ? `Firebase refresh failed; showing the previously loaded About page. ${error}`
-        : error;
+        : `Firebase refresh failed; showing the default About page content. ${error}`;
     }
 
     if (githubProjectsResult.status === 'fulfilled') {
@@ -77,6 +78,10 @@ export class AboutComponent {
 
   toggleProjects(): void {
     this.showAllProjects = !this.showAllProjects;
+  }
+
+  onProjectImageError(projectId: string): void {
+    this.failedProjectImageIds.add(projectId);
   }
 
   get heroPhotoUrl(): string {

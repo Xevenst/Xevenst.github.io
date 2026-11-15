@@ -39,6 +39,27 @@
         <div>
           <h2>{{ content.introductionHeading }}</h2>
           <p class="about-copy preserve-line-breaks">{{ content.introductionCopy }}</p>
+          <div class="about-origin-map">
+            <div class="about-origin-map-heading">
+              <h3>My journey</h3>
+              <a href="https://www.google.com/maps/dir/?api=1&amp;origin=Surabaya%2C%20Indonesia&amp;destination=Taipei%2C%20Taiwan"
+                 target="_blank" rel="noopener noreferrer">
+                See route options <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+            <div class="about-route" aria-label="Travel route from Surabaya, Indonesia to Taipei, Taiwan">
+              <div class="about-route-stop">
+                <span class="about-route-marker" aria-hidden="true"></span>
+                <div><small>From</small><strong>Surabaya</strong><span>Indonesia</span></div>
+              </div>
+              <div class="about-route-connector" aria-hidden="true"><span>✈</span></div>
+              <div class="about-route-stop">
+                <span class="about-route-marker" aria-hidden="true"></span>
+                <div><small>To</small><strong>Taipei</strong><span>Taiwan</span></div>
+              </div>
+            </div>
+            <p class="about-route-note">Route illustration · open Google Maps for travel options</p>
+          </div>
           <p class="about-availability"><i></i> {{ content.availability }}</p>
         </div>
       </section>
@@ -70,7 +91,15 @@
             <article class="about-project" *ngFor="let project of visibleProjects; let index = index">
               <span class="about-project-number">0{{ index + 1 }} / {{ project.year }}</span>
               <div class="about-project-art" [style.--project-accent]="project.accent">
-                <span>{{ project.title.split(' ')[0] }}</span>
+                <img
+                  *ngIf="project.imageUrl && !failedProjectImageIds.has(project.id)"
+                  [src]="project.imageUrl"
+                  [alt]="project.title + ' preview'"
+                  loading="lazy"
+                  (error)="onProjectImageError(project.id)">
+                <span *ngIf="!project.imageUrl || failedProjectImageIds.has(project.id)">
+                  {{ project.title.split(' ')[0] }}
+                </span>
               </div>
               <p class="card-kicker">{{ project.type }}</p>
               <h3>{{ project.title }}</h3>
