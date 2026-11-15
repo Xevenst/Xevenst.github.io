@@ -2,7 +2,11 @@ import { isPlatformBrowser } from '@angular/common';
 import { ChangeDetectorRef, Component, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { DEFAULT_ABOUT_CONTENT } from '../data/site-copy.data';
+import {
+  DEFAULT_ABOUT_CONTENT,
+  LEGACY_DEFAULT_ABOUT_SKILLS,
+  PREVIOUS_DEFAULT_ABOUT_SKILLS,
+} from '../data/site-copy.data';
 import { AboutPageContent, PortfolioProject } from '../models/portfolio.models';
 import { DatabaseService } from '../services/database.service';
 import { GitHubProjectsService, selectPinnedPublicProjects } from '../services/github-projects.service';
@@ -19,12 +23,14 @@ export class AboutComponent {
   pinnedProjects: PortfolioProject[] = [];
   publicProjects: PortfolioProject[] = [];
   showAllProjects = false;
-  failedProjectImageIds = new Set<string>();
+  projectsLoaded = false;
+  projectsLoading = false;
   contentError: string | null = null;
   projectError: string | null = null;
   contentAvailable = true;
   loading = true;
   private readonly contentCacheKey = 'xevenst-about-content-v1';
+  private readonly projectsCacheKey = 'xevenst-public-projects-v1';
 
   constructor(
     private readonly database: DatabaseService,
@@ -43,9 +49,15 @@ export class AboutComponent {
       this.changeDetector.markForCheck();
     }
 
-    const [contentResult, githubProjectsResult] = await Promise.allSettled([
+    const cachedProjects = this.readCachedProjects();
+    if (cachedProjects) {
+      this.publicProjects = cachedProjects;
+      this.pinnedProjects = selectPinnedPublicProjects(cachedProjects);
+      this.projectsLoaded = true;
+    }
+
+    const [contentResult] = await Promise.allSettled([
       this.withTimeout(this.database.getAboutContent(), 'Timed out loading About content from Firebase.'),
-      this.withTimeout(this.githubProjects.getPublicProjects(), 'Timed out loading public GitHub projects.'),
     ]);
 
     if (contentResult.status === 'fulfilled') {
@@ -59,15 +71,6 @@ export class AboutComponent {
         : `Firebase refresh failed; showing the default About page content. ${error}`;
     }
 
-    if (githubProjectsResult.status === 'fulfilled') {
-      this.publicProjects = githubProjectsResult.value;
-      this.pinnedProjects = selectPinnedPublicProjects(this.publicProjects);
-    } else {
-      this.projectError = this.errorMessage(
-        githubProjectsResult.reason,
-        'Public GitHub projects could not be loaded.',
-      );
-    }
     this.loading = false;
     this.changeDetector.markForCheck();
   }
@@ -80,8 +83,28 @@ export class AboutComponent {
     this.showAllProjects = !this.showAllProjects;
   }
 
-  onProjectImageError(projectId: string): void {
-    this.failedProjectImageIds.add(projectId);
+  async loadProjects(): Promise<void> {
+    if (this.projectsLoading) return;
+    this.projectsLoading = true;
+    this.projectError = null;
+    try {
+      const projects = await this.withTimeout(
+        this.githubProjects.getPublicProjects(),
+        'Timed out loading public GitHub projects.',
+      );
+      this.publicProjects = projects;
+      this.pinnedProjects = selectPinnedPublicProjects(projects);
+      this.cacheProjects(projects);
+      this.projectsLoaded = true;
+    } catch (error: unknown) {
+      const status = this.httpStatus(error);
+      this.projectError = status === 403
+        ? 'GitHub’s public API rate limit has been reached. Try again after it resets.'
+        : this.errorMessage(error, 'Public GitHub projects could not be loaded.');
+    } finally {
+      this.projectsLoading = false;
+      this.changeDetector.markForCheck();
+    }
   }
 
   get heroPhotoUrl(): string {
@@ -90,6 +113,17 @@ export class AboutComponent {
 
   get hobbiesPhotoUrl(): string {
     return toDriveImageUrl(this.content.hobbiesImageUrl);
+  }
+
+  get hobbyItems(): { title: string; description: string; photoUrl: string }[] {
+    return this.content.hobbyEntries.split(/\r?\n/)
+      .map((row) => row.split('|'))
+      .map(([title = '', description = '', ...photoUrlParts]) => ({
+        title: title.trim(),
+        description: description.trim(),
+        photoUrl: toDriveImageUrl(photoUrlParts.join('|').trim()),
+      }))
+      .filter((hobby) => hobby.title && hobby.description);
   }
 
   get highlights(): { value: string; label: string }[] {
@@ -135,6 +169,9 @@ export class AboutComponent {
       const parsed: unknown = JSON.parse(stored);
       if (typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)) {
         const content = { ...DEFAULT_ABOUT_CONTENT, ...parsed };
+        if (content.skills === LEGACY_DEFAULT_ABOUT_SKILLS || content.skills === PREVIOUS_DEFAULT_ABOUT_SKILLS) {
+          content.skills = DEFAULT_ABOUT_CONTENT.skills;
+        }
         if (this.isAboutContent(content)) return content;
       }
       window.localStorage.removeItem(this.contentCacheKey);
@@ -150,6 +187,32 @@ export class AboutComponent {
     } catch (error: unknown) {
       console.warn('The About page copy could not be cached in this browser.', error);
     }
+  }
+
+  private readCachedProjects(): PortfolioProject[] | null {
+    try {
+      const stored = window.localStorage.getItem(this.projectsCacheKey);
+      if (!stored) return null;
+      const parsed: unknown = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.every(isPortfolioProject)) return parsed;
+      window.localStorage.removeItem(this.projectsCacheKey);
+    } catch (error: unknown) {
+      console.warn('The saved public GitHub projects could not be read from this browser.', error);
+    }
+    return null;
+  }
+
+  private cacheProjects(projects: PortfolioProject[]): void {
+    try {
+      window.localStorage.setItem(this.projectsCacheKey, JSON.stringify(projects));
+    } catch (error: unknown) {
+      console.warn('The public GitHub projects could not be cached in this browser.', error);
+    }
+  }
+
+  private httpStatus(error: unknown): number | null {
+    if (typeof error !== 'object' || error === null || !('status' in error)) return null;
+    return typeof error.status === 'number' ? error.status : null;
   }
 
   private isAboutContent(value: unknown): value is AboutPageContent {
@@ -173,6 +236,22 @@ export class AboutComponent {
       );
     });
   }
+}
+
+function isPortfolioProject(value: unknown): value is PortfolioProject {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return false;
+  const project = value as Record<string, unknown>;
+  return typeof project['id'] === 'string'
+    && typeof project['title'] === 'string'
+    && typeof project['year'] === 'string'
+    && typeof project['type'] === 'string'
+    && typeof project['summary'] === 'string'
+    && typeof project['details'] === 'string'
+    && Array.isArray(project['technologies'])
+    && project['technologies'].every((item) => typeof item === 'string')
+    && typeof project['githubUrl'] === 'string'
+    && typeof project['featured'] === 'boolean'
+    && typeof project['accent'] === 'string';
 }
 
 function toDriveImageUrl(value: string): string {

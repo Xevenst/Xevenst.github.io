@@ -29,14 +29,17 @@
   </section>
   <section class="admin-section">
     <div class="panel-heading"><h2>About page copy</h2><span>Publicly readable · editable here</span></div>
-    <p class="admin-muted">This copy is shown on the public About page. Entries separated with pipes or new lines use the formats shown in their labels. To add either photo, upload it in Files with “Anyone with the link” enabled, copy its Open in Drive link, paste it into the matching photo URL field, and save About copy. Drive viewer links are converted automatically for image display.</p>
-    <div class="copy-editor-grid">
-      <ng-container *ngFor="let field of aboutContentFields">
-        <label>{{ field.label }}
-          <textarea *ngIf="field.multiline; else aboutSingleLine" [(ngModel)]="aboutContent[field.key]" rows="4"></textarea>
-          <ng-template #aboutSingleLine><input [(ngModel)]="aboutContent[field.key]" /></ng-template>
-        </label>
-      </ng-container>
+    <p class="admin-muted">This copy is shown on the public About page. Entries separated with pipes or new lines use the formats shown in their labels. Add expandable hobbies one per line as title|description|photo URL; the photo URL is optional. To add a photo, upload it in Files with “Anyone with the link” enabled, copy its Open in Drive link, and paste it into the matching photo field or hobby entry. Drive viewer links are converted automatically for image display.</p>
+    <div *ngFor="let section of aboutContentSections" class="copy-editor-section">
+      <h3>{{ section.title }}</h3>
+      <div class="copy-editor-grid">
+        <ng-container *ngFor="let field of section.fields">
+          <label>{{ field.label }}
+            <textarea *ngIf="field.multiline; else aboutSingleLine" [(ngModel)]="aboutContent[field.key]" rows="4"></textarea>
+            <ng-template #aboutSingleLine><input [(ngModel)]="aboutContent[field.key]" /></ng-template>
+          </label>
+        </ng-container>
+      </div>
     </div>
     <button type="button" class="save-button" (click)="saveAboutContent()">Save About copy to Firestore</button>
   </section>

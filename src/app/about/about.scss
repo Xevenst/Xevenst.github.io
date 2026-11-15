@@ -48,19 +48,6 @@
 .about-section-heading .eyebrow { margin-bottom: .7rem; }
 .about-section-heading h2 { margin: 0; }
 .about-project-link { color: var(--accent-color); }
-.about-project-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-.about-project { display: flex; min-width: 0; flex-direction: column; padding-bottom: 1.1rem; border-bottom: 1px solid var(--border-color); transition: border-color .2s ease; }
-.about-project:hover { border-color: var(--accent-color); }
-.about-project-number { color: var(--text-muted); font: .65rem var(--font-mono); }
-.about-project-art { position: relative; display: grid; height: 150px; margin: .8rem 0 1rem; place-items: center; overflow: hidden; background: linear-gradient(145deg, color-mix(in srgb, var(--project-accent) 32%, var(--surface)), var(--surface) 78%); }
-.about-project-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
-.about-project-art::after { position: absolute; right: -15%; bottom: -70%; width: 85%; aspect-ratio: 1; border: 1px solid color-mix(in srgb, var(--text-primary) 22%, transparent); border-radius: 50%; content: ''; }
-.about-project-art > span { position: relative; z-index: 1; color: var(--text-primary); font: 500 clamp(1.2rem, 2.5vw, 2rem) var(--font-display); letter-spacing: -.08em; text-transform: uppercase; }
-.about-project .card-kicker { margin: 0 0 .45rem; color: var(--accent-color); font: .63rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
-.about-project h3 { margin: 0 0 .5rem; font-size: 1rem; font-weight: 500; letter-spacing: -.02em; }
-.about-project > p:not(.card-kicker) { margin: 0 0 .8rem; color: var(--text-muted); font-size: .82rem; line-height: 1.6; }
-.about-project-link { display: flex; width: 100%; min-height: 2.75rem; align-items: center; justify-content: space-between; margin-top: auto; padding: .7rem .85rem; border: 1px solid var(--accent-color); background: color-mix(in srgb, var(--accent-color) 12%, var(--surface)); color: var(--text-primary); font: 700 .62rem var(--font-mono); letter-spacing: .04em; text-transform: uppercase; }
-.about-project-link span { color: var(--accent-color); }
 .spoken-languages { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem 1rem; }
 .spoken-languages h3 { flex-basis: 100%; color: var(--text-primary); font-size: .85rem; letter-spacing: .08em; text-transform: uppercase; }
 .spoken-languages p { margin: 0; color: var(--text-muted); font-size: .88rem; line-height: 1.8; }
@@ -72,17 +59,22 @@
 .about-contact-tooltip { position: absolute; top: 50%; left: calc(100% + .75rem); padding: .7rem .85rem; border: 1px solid var(--border-color); background: var(--surface); display: none; }
 .about-contact-action:hover .about-contact-tooltip, .about-contact-action[open] .about-contact-tooltip { display: block; }
 .content-error { margin: 0 0 1.5rem; color: var(--accent-warm); font-size: .85rem; }
-
-@media (max-width: 800px) {
-  .about-project-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-  .about-project-art { height: 200px; }
-}
+.about-hobby-list { margin-top: 2rem; border-top: 1px solid var(--border-color); }
+.about-hobby-item { border-bottom: 1px solid var(--border-color); }
+.about-hobby-item summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.15rem 0; color: var(--text-primary); font-size: 1.05rem; cursor: pointer; list-style: none; }
+.about-hobby-item summary::-webkit-details-marker { display: none; }
+.about-hobby-toggle { color: var(--accent-color); font: 1.2rem var(--font-mono); transition: transform .2s ease; }
+.about-hobby-item[open] .about-hobby-toggle { transform: rotate(45deg); }
+.about-hobby-content { display: grid; grid-template-columns: minmax(0, 1fr) minmax(180px, .7fr); align-items: start; gap: 1.5rem; padding: 0 0 1.5rem; }
+.about-hobby-content p { margin: 0; color: var(--text-muted); line-height: 1.75; }
+.about-hobby-content img { width: 100%; max-height: 320px; border: 1px solid var(--border-color); object-fit: cover; }
 
 @media (max-width: 600px) {
   .about-highlights { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .about-highlights > p { grid-column: 1 / -1; max-width: none; margin-top: .6rem; }
   .about-highlight span { font-size: .57rem; }
   .about-section-heading { align-items: start; flex-direction: column; }
+  .about-hobby-content { grid-template-columns: 1fr; }
 }
 
 @media (hover: none) {

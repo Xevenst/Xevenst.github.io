@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ContentService } from '../services/content.service';
 import { DatabaseService } from '../services/database.service';
-import { DEFAULT_ABOUT_CONTENT, DEFAULT_PORTFOLIO_CONTENT, ABOUT_CONTENT_FIELDS, PORTFOLIO_CONTENT_FIELDS } from '../data/site-copy.data';
+import { DEFAULT_ABOUT_CONTENT, DEFAULT_PORTFOLIO_CONTENT, ABOUT_CONTENT_SECTIONS, PORTFOLIO_CONTENT_FIELDS } from '../data/site-copy.data';
 import { PORTFOLIO_PROJECTS } from '../data/portfolio.data';
 import { AboutPageContent, DiaryEntry, PortfolioPageContent, PortfolioProject, StoredFile } from '../models/portfolio.models';
 
@@ -21,9 +21,12 @@ export class AdminComponent {
   diaryEntries: DiaryEntry[] = [];
   aboutContent: AboutPageContent = { ...DEFAULT_ABOUT_CONTENT };
   portfolioContent: PortfolioPageContent = { ...DEFAULT_PORTFOLIO_CONTENT };
-  readonly aboutContentFields = ABOUT_CONTENT_FIELDS.map((field) => ({
-    ...field,
-    multiline: 'multiline' in field && field.multiline,
+  readonly aboutContentSections = ABOUT_CONTENT_SECTIONS.map((section) => ({
+    ...section,
+    fields: section.fields.map((field) => ({
+      ...field,
+      multiline: 'multiline' in field && field.multiline,
+    })),
   }));
   readonly portfolioContentFields = PORTFOLIO_CONTENT_FIELDS.map((field) => ({
     ...field,

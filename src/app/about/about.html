@@ -87,34 +87,39 @@
             </div>
           </div>
           <p *ngIf="projectError" class="content-error">{{ projectError }}</p>
-          <div class="about-project-grid">
-            <article class="about-project" *ngFor="let project of visibleProjects; let index = index">
-              <span class="about-project-number">0{{ index + 1 }} / {{ project.year }}</span>
-              <div class="about-project-art" [style.--project-accent]="project.accent">
-                <img
-                  *ngIf="project.imageUrl && !failedProjectImageIds.has(project.id)"
-                  [src]="project.imageUrl"
-                  [alt]="project.title + ' preview'"
-                  loading="lazy"
-                  (error)="onProjectImageError(project.id)">
-                <span *ngIf="!project.imageUrl || failedProjectImageIds.has(project.id)">
-                  {{ project.title.split(' ')[0] }}
-                </span>
-              </div>
-              <p class="card-kicker">{{ project.type }}</p>
-              <h3>{{ project.title }}</h3>
-              <p class="preserve-line-breaks">{{ project.summary }}</p>
-              <a class="about-project-link" [href]="project.githubUrl" target="_blank" rel="noreferrer">
-                {{ content.openGithubLabel }} <span aria-hidden="true">↗</span>
-              </a>
-            </article>
-          </div>
-          <div class="about-project-toggle-wrap">
-            <button type="button" class="about-project-toggle" [attr.aria-expanded]="showAllProjects" (click)="toggleProjects()">
-              {{ showAllProjects ? 'Show pinned' : content.viewAllLabel }}
-              <span aria-hidden="true">{{ showAllProjects ? '↗' : '↓' }}</span>
-            </button>
-          </div>
+          <ng-container *ngIf="projectsLoaded; else projectLoadPrompt">
+            <div class="about-project-grid">
+              <article class="about-project" *ngFor="let project of visibleProjects; let index = index" [style.--project-accent]="project.accent">
+                <div class="about-project-meta">
+                  <span class="about-project-number">PROJECT 0{{ index + 1 }}</span>
+                  <span class="about-project-year">{{ project.year }}</span>
+                </div>
+                <p class="card-kicker">{{ project.type }}</p>
+                <h3>{{ project.title }}</h3>
+                <p class="preserve-line-breaks">{{ project.summary }}</p>
+                <a class="about-project-link" [href]="project.githubUrl" target="_blank" rel="noreferrer">
+                  {{ content.openGithubLabel }} <span aria-hidden="true">↗</span>
+                </a>
+              </article>
+            </div>
+            <div class="about-project-toggle-wrap">
+              <button type="button" class="about-project-toggle" [attr.aria-expanded]="showAllProjects" (click)="toggleProjects()">
+                {{ showAllProjects ? 'Show pinned' : content.viewAllLabel }}
+                <span aria-hidden="true">{{ showAllProjects ? '↗' : '↓' }}</span>
+              </button>
+              <button type="button" class="about-project-refresh" [disabled]="projectsLoading" (click)="loadProjects()">
+                {{ projectsLoading ? 'Refreshing…' : 'Refresh from GitHub' }}
+              </button>
+            </div>
+          </ng-container>
+          <ng-template #projectLoadPrompt>
+            <p class="about-project-load-note">Projects are loaded from GitHub only when you choose; this browser saves the results for future visits.</p>
+            <div class="about-project-toggle-wrap">
+              <button type="button" class="about-project-toggle" [disabled]="projectsLoading" (click)="loadProjects()">
+                {{ projectsLoading ? 'Loading projects…' : projectError ? 'Try again' : 'Load featured projects' }}
+              </button>
+            </div>
+          </ng-template>
         </div>
       </section>
 
@@ -170,6 +175,15 @@
           <div class="about-photo-frame about-hobby-photo">
             <img *ngIf="content.hobbiesImageUrl; else hobbiesPhotoPlaceholder" [src]="hobbiesPhotoUrl" [alt]="content.hobbiesHeading" loading="lazy">
             <ng-template #hobbiesPhotoPlaceholder><span>Hobbies photo will appear here</span></ng-template>
+          </div>
+          <div class="about-hobby-list" *ngIf="hobbyItems.length">
+            <details class="about-hobby-item" *ngFor="let hobby of hobbyItems">
+              <summary><span>{{ hobby.title }}</span><span class="about-hobby-toggle" aria-hidden="true">+</span></summary>
+              <div class="about-hobby-content">
+                <p class="preserve-line-breaks">{{ hobby.description }}</p>
+                <img *ngIf="hobby.photoUrl" [src]="hobby.photoUrl" [alt]="hobby.title" loading="lazy">
+              </div>
+            </details>
           </div>
         </div>
       </section>

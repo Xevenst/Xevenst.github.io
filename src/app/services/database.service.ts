@@ -8,7 +8,12 @@ import {
   getDocs,
   setDoc,
 } from 'firebase/firestore';
-import { DEFAULT_ABOUT_CONTENT, DEFAULT_PORTFOLIO_CONTENT } from '../data/site-copy.data';
+import {
+  DEFAULT_ABOUT_CONTENT,
+  DEFAULT_PORTFOLIO_CONTENT,
+  LEGACY_DEFAULT_ABOUT_SKILLS,
+  PREVIOUS_DEFAULT_ABOUT_SKILLS,
+} from '../data/site-copy.data';
 import { AboutPageContent, PortfolioPageContent, PortfolioProject } from '../models/portfolio.models';
 import { AuthService } from './auth.service';
 
@@ -57,6 +62,9 @@ export class DatabaseService {
         throw new Error('The Firebase document site_content/about is missing. Save About page copy from the admin panel.');
       }
       const value = { ...DEFAULT_ABOUT_CONTENT, ...snapshot.data() };
+      if (value.skills === LEGACY_DEFAULT_ABOUT_SKILLS || value.skills === PREVIOUS_DEFAULT_ABOUT_SKILLS) {
+        value.skills = DEFAULT_ABOUT_CONTENT.skills;
+      }
       if (!this.isStringRecord(value, DEFAULT_ABOUT_CONTENT)) {
         throw new Error('The About page content in Firebase is incomplete or invalid.');
       }

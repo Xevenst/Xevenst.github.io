@@ -30,7 +30,7 @@ describe('selectPinnedPublicProjects', () => {
 });
 
 describe('GitHubProjectsService', () => {
-  it('maps pinned repositories to their bundled preview assets', async () => {
+  it('returns project data without image assets', async () => {
     const http = jasmine.createSpyObj<HttpClient>('HttpClient', ['get']);
     http.get.and.returnValue(of([
       {
@@ -39,7 +39,6 @@ describe('GitHubProjectsService', () => {
         description: null,
         language: 'C#',
         created_at: '2022-01-01T00:00:00Z',
-        default_branch: 'main',
       },
       {
         name: 'MovLensDataSet',
@@ -47,7 +46,6 @@ describe('GitHubProjectsService', () => {
         description: null,
         language: 'Python',
         created_at: '2022-01-01T00:00:00Z',
-        default_branch: 'main',
       },
       {
         name: 'Split-Bill-Mobile-App',
@@ -55,17 +53,17 @@ describe('GitHubProjectsService', () => {
         description: null,
         language: 'Dart',
         created_at: '2022-01-01T00:00:00Z',
-        default_branch: 'main',
       },
     ]));
     const service = new GitHubProjectsService(http);
 
     const projects = await service.getPublicProjects();
 
-    expect(projects.map(({ imageUrl }) => imageUrl)).toEqual([
-      '/assets/project-previews/chromesthesia.png',
-      '/assets/project-previews/movlens-dataset.png',
-      '/assets/project-previews/split-bill-mobile-app.png',
+    expect(projects.map(({ title }) => title)).toEqual([
+      'Chromesthesia',
+      'MovLensDataSet',
+      'Split Bill Mobile App',
     ]);
+    expect(projects.every((project) => !('imageUrl' in project))).toBeTrue();
   });
 });

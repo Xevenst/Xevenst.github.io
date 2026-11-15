@@ -7,7 +7,6 @@ export interface PortfolioProject {
   details: string;
   technologies: string[];
   githubUrl: string;
-  imageUrl?: string;
   featured: boolean;
   accent: string;
 }
@@ -60,6 +59,7 @@ export interface AboutPageContent {
   hobbiesHeading: string;
   hobbiesDescription: string;
   hobbiesImageUrl: string;
+  hobbyEntries: string;
   contactEyebrow: string;
   contactTitle: string;
   contactAccent: string;
