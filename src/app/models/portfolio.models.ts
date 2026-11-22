@@ -46,6 +46,7 @@ export interface AboutPageContent {
   educationDegree: string;
   educationSchool: string;
   educationDetails: string;
+  educationLogoUrl: string;
   experienceHeading: string;
   experienceEntries: string;
   communityHeading: string;
@@ -68,14 +69,6 @@ export interface AboutPageContent {
 }
 
 export interface PortfolioPageContent {
-  eyebrow: string;
-  title: string;
-  titleAccent: string;
-  introduction: string;
-  projectCountLabel: string;
-  dataLabel: string;
-  signInToSaveLabel: string;
-  viewSavedLabel: string;
   loadingLabel: string;
   signInRequiredMessage: string;
   saveProjectLabel: string;
@@ -112,6 +105,15 @@ export interface DiaryEntry {
   id: string;
   title: string;
   body: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface HobbyEntry {
+  id: string;
+  title: string;
+  description: string;
+  photoUrl: string;
   createdAt: string;
   updatedAt: string;
 }

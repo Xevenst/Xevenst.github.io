@@ -7,18 +7,22 @@ import {
   LEGACY_DEFAULT_ABOUT_SKILLS,
   PREVIOUS_DEFAULT_ABOUT_SKILLS,
 } from '../data/site-copy.data';
-import { AboutPageContent, PortfolioProject } from '../models/portfolio.models';
+import { AboutPageContent, HobbyEntry, PortfolioProject } from '../models/portfolio.models';
 import { DatabaseService } from '../services/database.service';
 import { GitHubProjectsService, selectPinnedPublicProjects } from '../services/github-projects.service';
+import { DriveImageComponent } from '../shared/drive-image/drive-image';
+
+const FALLBACK_HERO_PHOTO_URL = 'https://drive.google.com/file/d/1A5G6Eo_b2EYpBWZjo59I9oRr6F7WlEc1/view?usp=drive_link';
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, DriveImageComponent],
   templateUrl: './about.html',
   styleUrl: './about.scss',
 })
 export class AboutComponent {
+  readonly fallbackHeroPhotoUrl = FALLBACK_HERO_PHOTO_URL;
   content: AboutPageContent = DEFAULT_ABOUT_CONTENT;
   pinnedProjects: PortfolioProject[] = [];
   publicProjects: PortfolioProject[] = [];
@@ -29,6 +33,7 @@ export class AboutComponent {
   projectError: string | null = null;
   contentAvailable = true;
   loading = true;
+  hobbies: HobbyEntry[] = [];
   private readonly contentCacheKey = 'xevenst-about-content-v1';
   private readonly projectsCacheKey = 'xevenst-public-projects-v1';
 
@@ -72,6 +77,14 @@ export class AboutComponent {
     }
 
     this.loading = false;
+
+    if (isPlatformBrowser(this.platformId)) {
+      try {
+        this.hobbies = await this.database.listHobbies();
+      } catch {
+        this.hobbies = [];
+      }
+    }
     this.changeDetector.markForCheck();
   }
 
@@ -107,21 +120,20 @@ export class AboutComponent {
     }
   }
 
-  get heroPhotoUrl(): string {
-    return toDriveImageUrl(this.content.heroImageUrl);
-  }
-
-  get hobbiesPhotoUrl(): string {
-    return toDriveImageUrl(this.content.hobbiesImageUrl);
-  }
-
   get hobbyItems(): { title: string; description: string; photoUrl: string }[] {
+    if (this.hobbies.length) {
+      return this.hobbies.map((entry) => ({
+        title: entry.title,
+        description: entry.description,
+        photoUrl: entry.photoUrl,
+      }));
+    }
     return this.content.hobbyEntries.split(/\r?\n/)
       .map((row) => row.split('|'))
       .map(([title = '', description = '', ...photoUrlParts]) => ({
         title: title.trim(),
         description: description.trim(),
-        photoUrl: toDriveImageUrl(photoUrlParts.join('|').trim()),
+        photoUrl: photoUrlParts.join('|').trim(),
       }))
       .filter((hobby) => hobby.title && hobby.description);
   }
@@ -134,9 +146,11 @@ export class AboutComponent {
     ];
   }
 
-  get experienceItems(): { date: string; company: string; role: string; description: string }[] {
-    return this.parseRows(this.content.experienceEntries, 4)
-      .map(([date, company, role, description]) => ({ date, company, role, description }));
+  get experienceItems(): { date: string; company: string; role: string; description: string; logoUrl: string }[] {
+    return this.content.experienceEntries.split(/\r?\n/)
+      .map((row) => row.split('|').map((field) => field.trim()))
+      .filter((fields) => (fields.length === 4 || fields.length === 5) && fields.slice(0, 4).every(Boolean))
+      .map(([date, company, role, description, logoUrl = '']) => ({ date, company, role, description, logoUrl }));
   }
 
   get communityItems(): { title: string; date: string; description: string }[] {
@@ -252,17 +266,4 @@ function isPortfolioProject(value: unknown): value is PortfolioProject {
     && typeof project['githubUrl'] === 'string'
     && typeof project['featured'] === 'boolean'
     && typeof project['accent'] === 'string';
-}
-
-function toDriveImageUrl(value: string): string {
-  try {
-    const url = new URL(value);
-    if (url.hostname.toLowerCase() !== 'drive.google.com') return value;
-    const fileId = url.pathname.match(/^\/file\/d\/([^/]+)/)?.[1] ?? url.searchParams.get('id');
-    return fileId
-      ? `https://drive.google.com/thumbnail?id=${encodeURIComponent(fileId)}&sz=w1600`
-      : value;
-  } catch {
-    return value;
-  }
 }

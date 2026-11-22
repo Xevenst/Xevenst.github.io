@@ -9,8 +9,13 @@
       <p class="about-lede preserve-line-breaks">{{ content.heroRole }}</p>
     </div>
     <div class="about-photo-frame about-hero-photo">
-      <img *ngIf="content.heroImageUrl; else heroPhotoPlaceholder" [src]="heroPhotoUrl" [alt]="content.heroTitle" fetchpriority="high">
-      <ng-template #heroPhotoPlaceholder><span>About photo will appear here</span></ng-template>
+      <app-drive-image
+        [src]="content.heroImageUrl || fallbackHeroPhotoUrl"
+        [alt]="content.heroTitle"
+        loading="eager"
+        fetchPriority="high"
+        placeholder="About photo will appear here">
+      </app-drive-image>
     </div>
   </header>
 
@@ -70,8 +75,21 @@
           <h2>{{ content.experienceHeading }}</h2>
           <article class="timeline-item" *ngFor="let item of experienceItems">
             <div class="timeline-date">{{ item.date }}</div>
-            <h3>{{ item.company }}</h3>
-            <p class="role">{{ item.role }}</p>
+            <div class="timeline-heading">
+              <div class="timeline-logo" *ngIf="item.logoUrl">
+                <app-drive-image
+                  [src]="item.logoUrl"
+                  [alt]="item.company + ' logo'"
+                  loading="lazy"
+                  placeholder=""
+                  errorText="">
+                </app-drive-image>
+              </div>
+              <div class="timeline-entry-copy">
+                <h3>{{ item.company }}</h3>
+                <p class="role">{{ item.role }}</p>
+              </div>
+            </div>
             <p class="preserve-line-breaks">{{ item.description }}</p>
           </article>
         </div>
@@ -127,10 +145,21 @@
         <p id="education" class="block-number">04</p>
         <div>
           <h2>{{ content.educationHeading }}</h2>
-          <div class="feature-note">
-            <strong>{{ content.educationDegree }}</strong>
-            <span>{{ content.educationSchool }}</span>
-            <span>{{ content.educationDetails }}</span>
+          <div class="education-entry">
+            <div class="education-logo" *ngIf="content.educationLogoUrl">
+              <app-drive-image
+                [src]="content.educationLogoUrl"
+                [alt]="content.educationSchool + ' logo'"
+                loading="lazy"
+                placeholder=""
+                errorText="">
+              </app-drive-image>
+            </div>
+            <div class="feature-note">
+              <strong>{{ content.educationDegree }}</strong>
+              <span>{{ content.educationSchool }}</span>
+              <span>{{ content.educationDetails }}</span>
+            </div>
           </div>
         </div>
       </section>
@@ -172,16 +201,11 @@
         <div>
           <h2>{{ content.hobbiesHeading }}</h2>
           <p *ngIf="content.hobbiesDescription" class="about-copy preserve-line-breaks">{{ content.hobbiesDescription }}</p>
-          <div class="about-photo-frame about-hobby-photo">
-            <img *ngIf="content.hobbiesImageUrl; else hobbiesPhotoPlaceholder" [src]="hobbiesPhotoUrl" [alt]="content.hobbiesHeading" loading="lazy">
-            <ng-template #hobbiesPhotoPlaceholder><span>Hobbies photo will appear here</span></ng-template>
-          </div>
           <div class="about-hobby-list" *ngIf="hobbyItems.length">
             <details class="about-hobby-item" *ngFor="let hobby of hobbyItems">
               <summary><span>{{ hobby.title }}</span><span class="about-hobby-toggle" aria-hidden="true">+</span></summary>
               <div class="about-hobby-content">
                 <p class="preserve-line-breaks">{{ hobby.description }}</p>
-                <img *ngIf="hobby.photoUrl" [src]="hobby.photoUrl" [alt]="hobby.title" loading="lazy">
               </div>
             </details>
           </div>

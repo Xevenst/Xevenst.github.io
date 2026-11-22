@@ -4,21 +4,21 @@ import { FormsModule } from '@angular/forms';
 import { ContentService } from '../services/content.service';
 import { DatabaseService } from '../services/database.service';
 import { DEFAULT_ABOUT_CONTENT, DEFAULT_PORTFOLIO_CONTENT, ABOUT_CONTENT_SECTIONS, PORTFOLIO_CONTENT_FIELDS } from '../data/site-copy.data';
-import { PORTFOLIO_PROJECTS } from '../data/portfolio.data';
-import { AboutPageContent, DiaryEntry, PortfolioPageContent, PortfolioProject, StoredFile } from '../models/portfolio.models';
+import { AboutPageContent, DiaryEntry, HobbyEntry, PortfolioPageContent, StoredFile } from '../models/portfolio.models';
+import { DriveImageComponent } from '../shared/drive-image/drive-image';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DriveImageComponent],
   templateUrl: './admin.html',
   styleUrl: './admin.scss',
 })
 export class AdminComponent {
-  projects: PortfolioProject[] = [];
-  projectsSource = 'local';
   files: StoredFile[] = [];
   diaryEntries: DiaryEntry[] = [];
+  hobbies: HobbyEntry[] = [];
+  isNewHobbyEntry = false;
   aboutContent: AboutPageContent = { ...DEFAULT_ABOUT_CONTENT };
   portfolioContent: PortfolioPageContent = { ...DEFAULT_PORTFOLIO_CONTENT };
   readonly aboutContentSections = ABOUT_CONTENT_SECTIONS.map((section) => ({
@@ -32,9 +32,8 @@ export class AdminComponent {
     ...field,
     multiline: 'multiline' in field && field.multiline,
   }));
-  selected: PortfolioProject | null = null;
-  technologiesText = '';
   selectedDiary: DiaryEntry | null = null;
+  selectedHobby: HobbyEntry | null = null;
   message: string | null = null;
   error: string | null = null;
   uploading = false;
@@ -53,26 +52,23 @@ export class AdminComponent {
   async load(): Promise<void> {
     try {
       const results = await Promise.allSettled([
-        this.database.getProjects(),
         this.content.listFiles(),
         this.content.listDiaryEntries(),
+        this.content.listHobbyEntries(),
         this.database.getAboutContent(),
         this.database.getPortfolioPageContent(),
       ]);
 
       if (results[0].status === 'fulfilled') {
-        this.projects = results[0].value;
-        this.projectsSource = this.database.source;
-      }
-      if (results[1].status === 'fulfilled') {
-        const files = new Map(results[1].value.map((file) => [file.id, file]));
+        const files = new Map(results[0].value.map((file) => [file.id, file]));
         this.fileChanges.forEach((file, id) => {
           if (file) files.set(id, file);
           else files.delete(id);
         });
         this.files = [...files.values()].sort((left, right) => right.uploadedAt.localeCompare(left.uploadedAt));
       }
-      if (results[2].status === 'fulfilled') this.diaryEntries = results[2].value;
+      if (results[1].status === 'fulfilled') this.diaryEntries = results[1].value;
+      if (results[2].status === 'fulfilled') this.hobbies = results[2].value;
       if (results[3].status === 'fulfilled') this.aboutContent = results[3].value;
       if (results[4].status === 'fulfilled') this.portfolioContent = results[4].value;
 
@@ -80,41 +76,6 @@ export class AdminComponent {
         .filter((result): result is PromiseRejectedResult => result.status === 'rejected')
         .map(({ reason }) => reason instanceof Error ? reason.message : 'Some admin content could not be loaded.');
       this.error = failures.length ? failures.join(' ') : null;
-    } finally {
-      this.changeDetector.markForCheck();
-    }
-  }
-
-  edit(project: PortfolioProject): void {
-    this.selected = { ...project, technologies: [...project.technologies] };
-    this.technologiesText = project.technologies.join('\n');
-    this.message = null;
-    this.error = null;
-  }
-
-  async save(): Promise<void> {
-    if (!this.selected) return;
-    try {
-      this.selected.technologies = this.technologiesText.split(/\r?\n/).map((technology) => technology.trim()).filter(Boolean);
-      await this.database.saveProject(this.selected);
-      this.message = 'Project saved to Firebase.';
-      await this.load();
-    } catch (error: unknown) {
-      this.error = error instanceof Error ? error.message : 'The project could not be saved.';
-    } finally {
-      this.changeDetector.markForCheck();
-    }
-  }
-
-  async publishStarterProjects(): Promise<void> {
-    try {
-      for (const project of PORTFOLIO_PROJECTS) {
-        await this.database.saveProject(project);
-      }
-      this.message = 'Starter projects published to Firestore.';
-      await this.load();
-    } catch (error: unknown) {
-      this.error = error instanceof Error ? error.message : 'Starter projects could not be published.';
     } finally {
       this.changeDetector.markForCheck();
     }
@@ -139,18 +100,6 @@ export class AdminComponent {
       this.error = null;
     } catch (error: unknown) {
       this.error = error instanceof Error ? error.message : 'Portfolio page copy could not be saved.';
-    } finally {
-      this.changeDetector.markForCheck();
-    }
-  }
-
-  async remove(project: PortfolioProject): Promise<void> {
-    try {
-      await this.database.deleteProject(project.id);
-      this.message = `${project.title} removed from Firebase.`;
-      await this.load();
-    } catch (error: unknown) {
-      this.error = error instanceof Error ? error.message : 'The project could not be removed.';
     } finally {
       this.changeDetector.markForCheck();
     }
@@ -239,6 +188,62 @@ export class AdminComponent {
       await this.load();
     } catch (error: unknown) {
       this.error = error instanceof Error ? error.message : 'The diary entry could not be removed.';
+    } finally {
+      this.changeDetector.markForCheck();
+    }
+  }
+
+  editHobby(entry: HobbyEntry): void {
+    this.selectedHobby = { ...entry };
+    this.isNewHobbyEntry = false;
+    this.message = null;
+    this.error = null;
+  }
+
+  newHobby(): void {
+    const now = new Date().toISOString();
+    this.selectedHobby = { id: crypto.randomUUID(), title: '', description: '', photoUrl: '', createdAt: now, updatedAt: now };
+    this.isNewHobbyEntry = true;
+    this.message = null;
+    this.error = null;
+  }
+
+  async saveHobby(): Promise<void> {
+    if (!this.selectedHobby) return;
+    try {
+      this.selectedHobby.updatedAt = new Date().toISOString();
+      await this.content.saveHobbyEntry(this.selectedHobby);
+      this.message = 'Hobby entry saved.';
+      await this.load();
+    } catch (error: unknown) {
+      this.error = error instanceof Error ? error.message : 'The hobby entry could not be saved.';
+    } finally {
+      this.changeDetector.markForCheck();
+    }
+  }
+
+  async saveAndAddHobby(): Promise<void> {
+    if (!this.selectedHobby) return;
+    try {
+      this.selectedHobby.updatedAt = new Date().toISOString();
+      await this.content.saveHobbyEntry(this.selectedHobby);
+      await this.load();
+      this.newHobby();
+      this.message = 'Saved; ready for a new entry.';
+    } catch (error: unknown) {
+      this.error = error instanceof Error ? error.message : 'The hobby entry could not be saved.';
+    } finally {
+      this.changeDetector.markForCheck();
+    }
+  }
+
+  async removeHobby(entry: HobbyEntry): Promise<void> {
+    try {
+      await this.content.deleteHobbyEntry(entry.id);
+      this.message = 'Hobby entry removed.';
+      await this.load();
+    } catch (error: unknown) {
+      this.error = error instanceof Error ? error.message : 'The hobby entry could not be removed.';
     } finally {
       this.changeDetector.markForCheck();
     }

@@ -1,0 +1,10 @@
+<img
+  *ngIf="currentUrl"
+  [src]="currentUrl"
+  [alt]="alt"
+  [attr.loading]="loading"
+  [attr.fetchpriority]="fetchPriority"
+  decoding="async"
+  referrerpolicy="no-referrer"
+  (error)="handleError()">
+<span *ngIf="!currentUrl" class="drive-image-message">{{ failed ? errorText : placeholder }}</span>

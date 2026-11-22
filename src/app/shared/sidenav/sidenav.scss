@@ -1,31 +1,13 @@
-.sidenav-trigger {
-  position: fixed;
-  left: 1rem;
-  bottom: 1.4rem;
-  z-index: 30;
-  display: grid;
-  width: 2.75rem;
-  height: 2.75rem;
-  place-content: center;
-  gap: 4px;
-  border: 1px solid var(--border-color);
-  border-radius: 0;
-  background: var(--surface);
-  box-shadow: 0 8px 24px rgba(0,0,0,.16);
-  cursor: pointer;
-}
-
-.sidenav-trigger span { display: block; width: 1rem; height: 1px; background: var(--accent-color); }
 .sidenav-scrim { position: fixed; inset: 0; z-index: 24; visibility: hidden; background: rgba(8, 8, 7, .68); opacity: 0; transition: opacity .25s ease, visibility .25s ease; }
 .sidenav-scrim.visible { visibility: visible; opacity: 1; }
 
 .sidenav {
   position: fixed;
+  top: 5.1rem;
   left: 0;
-  bottom: 0;
   z-index: 25;
   width: min(340px, calc(100vw - 2rem));
-  height: min(500px, calc(100vh - 2rem));
+  height: min(500px, calc(100vh - 6.3rem));
   padding: 1.5rem;
   border: 1px solid var(--border-color);
   border-radius: 0;

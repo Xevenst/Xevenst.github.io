@@ -1,19 +1,13 @@
-.portfolio { padding-top: clamp(4rem, 9vw, 8rem); padding-bottom: 7rem; }
-.portfolio-header { display: flex; align-items: end; justify-content: space-between; gap: 3rem; margin-bottom: 5rem; }
-.portfolio-header h1 { margin: 0; font-size: clamp(3rem, 7vw, 7rem); font-weight: 500; letter-spacing: -.08em; line-height: .94; }
-.portfolio-intro { max-width: 330px; margin: 0 0 .5rem; color: var(--text-muted); font-size: 1rem; line-height: 1.7; }
-.portfolio-status { display: flex; align-items: center; gap: 2rem; padding: 1rem 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); color: var(--text-muted); font: .68rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
-.portfolio-status i { display: inline-block; width: 6px; height: 6px; margin-right: .5rem; border-radius: 50%; background: var(--accent-warm); }
-.portfolio-status a { margin-left: auto; color: var(--accent-color); }
+.portfolio { display: flex; min-height: calc(100svh - 4.3rem); flex-direction: column; justify-content: center; max-width: 1240px; margin-inline: auto; padding-block: 2rem; overflow: visible; }
 .notice { color: var(--text-muted); font-size: .9rem; }
 .notice-error { color: var(--accent-warm); }
-.portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; margin-top: 1rem; }
-.portfolio-card { position: relative; display: flex; flex-direction: column; padding: 1rem 0 1.4rem; border-bottom: 1px solid var(--border-color); transition: border-color .25s ease; }
+.portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; margin-top: 0; }
+.portfolio-card { position: relative; display: flex; flex-direction: column; padding: 0 0 1.4rem; border-bottom: 1px solid var(--border-color); transition: border-color .25s ease; }
 .portfolio-card:hover { border-color: var(--accent-color); }
 .portfolio-card-top { display: flex; justify-content: space-between; color: var(--text-muted); font: .67rem var(--font-mono); }
 .portfolio-card-top button { border: 0; background: none; color: var(--text-muted); cursor: pointer; font-size: 1.4rem; line-height: 1; }
 .portfolio-card-top button.saved { color: var(--accent-warm); }
-.portfolio-art { position: relative; display: flex; align-items: center; justify-content: space-between; height: 210px; margin: 1.2rem 0 1.5rem; padding: 1.5rem; overflow: hidden; background: linear-gradient(145deg, color-mix(in srgb, var(--project-accent) 30%, var(--surface)), var(--surface) 80%); }
+.portfolio-art { position: relative; display: flex; align-items: center; justify-content: space-between; height: 210px; margin: 0 0 1.5rem; padding: 1.5rem; overflow: hidden; background: linear-gradient(145deg, color-mix(in srgb, var(--project-accent) 30%, var(--surface)), var(--surface) 80%); }
 .portfolio-art::before { position: absolute; top: 18%; right: -18%; width: 70%; aspect-ratio: 1; border: 1px solid color-mix(in srgb, var(--text-primary) 25%, transparent); border-radius: 50%; content: ''; }
 .portfolio-art span { position: relative; z-index: 1; color: color-mix(in srgb, var(--text-primary) 88%, transparent); font: 500 clamp(2rem, 4vw, 3.6rem) var(--font-display); letter-spacing: -.08em; text-transform: uppercase; }
 .portfolio-art b { position: relative; z-index: 1; align-self: end; color: rgba(255,255,255,.75); font: .7rem var(--font-mono); }
@@ -23,16 +17,21 @@
 .details { margin: 1.1rem 0; padding-top: 1rem; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: .83rem; line-height: 1.6; }
 .technology-list { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1.3rem 0 1.5rem; }
 .technology-list span { padding: .38rem .45rem; border: 1px solid var(--border-color); color: var(--text-muted); font: .62rem var(--font-mono); }
-.portfolio-documents { margin-top: clamp(5rem, 10vw, 8rem); padding-top: 2rem; border-top: 1px solid var(--border-color); }
-.portfolio-documents-heading { max-width: 650px; margin-bottom: 2rem; }
+.portfolio-documents { width: 100%; max-width: 1200px; margin: 3.5rem auto 0; }
+.portfolio-grid:empty + .portfolio-documents { margin-top: 0; }
+.portfolio-documents-heading { max-width: 650px; margin: 0 0 2rem; }
 .portfolio-documents-heading .eyebrow { color: var(--accent-color); font: .68rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
 .portfolio-documents-heading h2 { margin: 0; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 500; letter-spacing: -.06em; line-height: 1.05; }
 .portfolio-document-grid { display: grid; grid-auto-rows: 1fr; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.4rem; }
 .portfolio-document { display: flex; min-width: 0; height: 100%; flex-direction: column; padding: 1rem; border: 1px solid var(--border-color); background: var(--surface); }
-.portfolio-document-preview { display: flex; aspect-ratio: .72; align-items: center; justify-content: center; overflow: hidden; background: var(--bg-primary); }
+.portfolio-document-preview { display: flex; aspect-ratio: .9; align-items: center; justify-content: center; overflow: hidden; background: var(--bg-primary); }
 .portfolio-document-preview img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .portfolio-document-info { padding: .8rem 0 0; }
 .portfolio-document-info h3 { margin: 0; font-size: .95rem; font-weight: 500; }
-@media (max-width: 850px) { .portfolio-header { align-items: start; flex-direction: column; } .portfolio-intro { max-width: 500px; } .portfolio-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 850px) { .portfolio-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 700px) { .portfolio-document-grid { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 580px) { .portfolio-grid, .portfolio-document-grid { grid-template-columns: 1fr; } .portfolio-status { align-items: flex-start; flex-wrap: wrap; gap: .7rem 1rem; } .portfolio-status a { flex-basis: 100%; margin-left: 0; } }
+@media (max-width: 580px) { .portfolio-grid, .portfolio-document-grid { grid-template-columns: 1fr; } }
+@media (max-width: 700px) {
+  .portfolio { min-height: 0; padding-bottom: 4rem; }
+  .portfolio-documents { margin-top: 4rem; }
+}
