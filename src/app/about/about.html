@@ -201,20 +201,11 @@
         <div>
           <h2>{{ content.hobbiesHeading }}</h2>
           <p *ngIf="content.hobbiesDescription" class="about-copy preserve-line-breaks">{{ content.hobbiesDescription }}</p>
-          <div class="about-photo-frame about-hobby-photo">
-            <app-drive-image
-              [src]="content.hobbiesImageUrl"
-              [alt]="content.hobbiesHeading"
-              loading="lazy"
-              placeholder="Hobbies photo will appear here">
-            </app-drive-image>
-          </div>
           <div class="about-hobby-list" *ngIf="hobbyItems.length">
             <details class="about-hobby-item" *ngFor="let hobby of hobbyItems">
               <summary><span>{{ hobby.title }}</span><span class="about-hobby-toggle" aria-hidden="true">+</span></summary>
               <div class="about-hobby-content">
                 <p class="preserve-line-breaks">{{ hobby.description }}</p>
-                <app-drive-image *ngIf="hobby.photoUrl" [src]="hobby.photoUrl" [alt]="hobby.title" loading="lazy"></app-drive-image>
               </div>
             </details>
           </div>
