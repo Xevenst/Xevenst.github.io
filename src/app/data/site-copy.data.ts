@@ -38,6 +38,7 @@ export const DEFAULT_ABOUT_CONTENT: AboutPageContent = {
   educationDegree: 'Computer Science and Information Engineering',
   educationSchool: 'National Dong Hwa University · Hualien, Taiwan',
   educationDetails: 'GPA: 3.7 / 4.5 · Four years',
+  educationLogoUrl: '',
   experienceHeading: 'Work experience',
   experienceEntries: 'May 2024 — Present|Micron Technology, Inc.|Software Development Engineer · Taoyuan, Taiwan|Develop and deliver high quality, maintainable programs across UI, API, and database areas.\nApr 2023 — Jun 2023|National Dong Hwa University · Taiwan|Introduction to Computer Programming II · Teaching Assistant|Assisted students with programming assignments by teaching the basics of coding and the logic behind the assignments.',
   communityHeading: 'Organisational & volunteer experience',
@@ -60,14 +61,6 @@ export const DEFAULT_ABOUT_CONTENT: AboutPageContent = {
 };
 
 export const DEFAULT_PORTFOLIO_CONTENT: PortfolioPageContent = {
-  eyebrow: 'Selected work / 2022—2023',
-  title: 'Small projects.',
-  titleAccent: 'Real questions.',
-  introduction: 'A collection of experiments, assignments, and products exploring how software can make everyday tasks more understandable.',
-  projectCountLabel: 'projects',
-  dataLabel: 'Data:',
-  signInToSaveLabel: 'Sign in to save work →',
-  viewSavedLabel: 'View saved work →',
   loadingLabel: 'Loading portfolio data…',
   signInRequiredMessage: 'Sign in to save projects to your personal collection.',
   saveProjectLabel: 'Save project',
@@ -119,7 +112,7 @@ export const ABOUT_CONTENT_SECTIONS = [
     title: 'Work experience',
     fields: [
       { key: 'experienceHeading', label: 'Experience heading' },
-      { key: 'experienceEntries', label: 'Entries (date|company|role|description per line)', multiline: true },
+      { key: 'experienceEntries', label: 'Entries (date|company|role|description|logo URL per line)', multiline: true },
     ],
   },
   {
@@ -139,6 +132,7 @@ export const ABOUT_CONTENT_SECTIONS = [
       { key: 'educationDegree', label: 'Degree' },
       { key: 'educationSchool', label: 'School and location' },
       { key: 'educationDetails', label: 'Education details' },
+      { key: 'educationLogoUrl', label: 'Education logo URL' },
     ],
   },
   {
@@ -197,14 +191,6 @@ export const ABOUT_CONTENT_SECTIONS = [
 }[];
 
 export const PORTFOLIO_CONTENT_FIELDS = [
-  { key: 'eyebrow', label: 'Portfolio eyebrow' },
-  { key: 'title', label: 'Portfolio title' },
-  { key: 'titleAccent', label: 'Portfolio emphasized title' },
-  { key: 'introduction', label: 'Portfolio introduction', multiline: true },
-  { key: 'projectCountLabel', label: 'Project count label' },
-  { key: 'dataLabel', label: 'Data source label' },
-  { key: 'signInToSaveLabel', label: 'Sign-in prompt' },
-  { key: 'viewSavedLabel', label: 'Saved projects link' },
   { key: 'loadingLabel', label: 'Loading message' },
   { key: 'signInRequiredMessage', label: 'Bookmark sign-in message' },
   { key: 'saveProjectLabel', label: 'Save-project accessible label' },

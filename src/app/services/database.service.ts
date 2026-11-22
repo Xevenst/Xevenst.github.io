@@ -6,6 +6,8 @@ import {
   doc,
   getDoc,
   getDocs,
+  orderBy,
+  query,
   setDoc,
 } from 'firebase/firestore';
 import {
@@ -14,7 +16,7 @@ import {
   LEGACY_DEFAULT_ABOUT_SKILLS,
   PREVIOUS_DEFAULT_ABOUT_SKILLS,
 } from '../data/site-copy.data';
-import { AboutPageContent, PortfolioPageContent, PortfolioProject } from '../models/portfolio.models';
+import { AboutPageContent, HobbyEntry, PortfolioPageContent, PortfolioProject } from '../models/portfolio.models';
 import { AuthService } from './auth.service';
 
 export type PortfolioDataSource = 'local' | 'firebase';
@@ -102,6 +104,23 @@ export class DatabaseService {
   async savePortfolioPageContent(content: PortfolioPageContent): Promise<void> {
     this.requireAdmin();
     await setDoc(doc(this.requireDatabase(), 'site_content', 'portfolio'), content);
+  }
+
+  async listHobbies(): Promise<HobbyEntry[]> {
+    const database = this.requireDatabase();
+    const snapshot = await getDocs(query(collection(database, 'hobby_entries'), orderBy('updatedAt', 'desc')));
+    return snapshot.docs.map((entry) => this.toHobbyEntry(entry.data()));
+  }
+
+  private toHobbyEntry(value: Record<string, unknown>): HobbyEntry {
+    return {
+      id: String(value['id']),
+      title: String(value['title']),
+      description: String(value['description']),
+      photoUrl: String(value['photoUrl']),
+      createdAt: String(value['createdAt']),
+      updatedAt: String(value['updatedAt']),
+    };
   }
 
   async getBookmarks(): Promise<string[]> {

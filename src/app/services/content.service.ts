@@ -9,7 +9,7 @@ import {
   query,
   setDoc,
 } from 'firebase/firestore';
-import { DiaryEntry, StoredFile } from '../models/portfolio.models';
+import { DiaryEntry, HobbyEntry, StoredFile } from '../models/portfolio.models';
 import { AuthService } from './auth.service';
 import { environment } from '../../environments/environment';
 
@@ -73,6 +73,22 @@ export class ContentService {
   async deleteDiaryEntry(entryId: string): Promise<void> {
     this.requireAdmin();
     await deleteDoc(doc(this.requireDatabase(), 'diary_entries', entryId));
+  }
+
+  async listHobbyEntries(): Promise<HobbyEntry[]> {
+    this.requireAdmin();
+    const snapshot = await getDocs(query(collection(this.requireDatabase(), 'hobby_entries'), orderBy('updatedAt', 'desc')));
+    return snapshot.docs.map((entry) => this.toHobbyEntry(entry.data()));
+  }
+
+  async saveHobbyEntry(entry: HobbyEntry): Promise<void> {
+    this.requireAdmin();
+    await setDoc(doc(this.requireDatabase(), 'hobby_entries', entry.id), entry);
+  }
+
+  async deleteHobbyEntry(entryId: string): Promise<void> {
+    this.requireAdmin();
+    await deleteDoc(doc(this.requireDatabase(), 'hobby_entries', entryId));
   }
 
   private requireDatabase() {
@@ -179,6 +195,17 @@ export class ContentService {
       id: String(value['id']),
       title: String(value['title']),
       body: String(value['body']),
+      createdAt: String(value['createdAt']),
+      updatedAt: String(value['updatedAt']),
+    };
+  }
+
+  private toHobbyEntry(value: Record<string, unknown>): HobbyEntry {
+    return {
+      id: String(value['id']),
+      title: String(value['title']),
+      description: String(value['description']),
+      photoUrl: String(value['photoUrl']),
       createdAt: String(value['createdAt']),
       updatedAt: String(value['updatedAt']),
     };

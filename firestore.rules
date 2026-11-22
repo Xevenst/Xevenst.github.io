@@ -37,6 +37,11 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
+    match /hobby_entries/{entryId} {
+      allow read;
+      allow write: if isAdmin();
+    }
+
     match /admin_users/{userId} {
       allow read: if signedIn() && request.auth.uid == userId;
       allow write: if false;

@@ -1,7 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { ChangeDetectorRef, Component, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { DatabaseService } from '../services/database.service';
 import { DEFAULT_PORTFOLIO_CONTENT } from '../data/site-copy.data';
@@ -10,7 +9,7 @@ import { PortfolioPageContent, PortfolioProject } from '../models/portfolio.mode
 @Component({
   selector: 'app-portfolio',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './portfolio.html',
   styleUrl: './portfolio.scss',
 })
@@ -19,20 +18,16 @@ export class PortfolioComponent {
   savedIds = new Set<string>();
   loading = true;
   contentAvailable = false;
-  dataSource = 'local';
   dataError: string | null = null;
   loadError: string | null = null;
   content: PortfolioPageContent = DEFAULT_PORTFOLIO_CONTENT;
-  readonly user$;
   private readonly cacheKey = 'xevenst-portfolio-data-v1';
   constructor(
     private readonly database: DatabaseService,
     private readonly auth: AuthService,
     private readonly changeDetector: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private readonly platformId: object,
-  ) {
-    this.user$ = auth.user$;
-  }
+  ) {}
 
   get documents() {
     return [
@@ -60,7 +55,6 @@ export class PortfolioComponent {
     if (cachedData) {
       this.projects = cachedData.projects;
       this.content = cachedData.content;
-      this.dataSource = 'firebase';
       this.contentAvailable = true;
       this.loading = false;
       this.changeDetector.markForCheck();
@@ -71,7 +65,6 @@ export class PortfolioComponent {
         this.withTimeout(this.database.getProjects(), 'Timed out loading portfolio projects from Firebase.'),
         this.withTimeout(this.database.getPortfolioPageContent(), 'Timed out loading Portfolio content from Firebase.'),
       ]);
-      this.dataSource = this.database.source;
       this.contentAvailable = true;
       this.cacheData();
       if (this.auth.currentUser) {

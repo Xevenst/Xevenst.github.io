@@ -1,6 +1,6 @@
-.about { padding-top: clamp(4rem, 9vw, 8rem); padding-bottom: 6rem; }
-.about-header { max-width: none; margin-bottom: clamp(5rem, 10vw, 9rem); }
-.about-header h1 { margin-bottom: 2rem; font-size: clamp(3rem, 7vw, 7rem); font-weight: 500; letter-spacing: -.08em; line-height: .94; }
+.about { max-width: 1040px; margin-inline: auto; margin-top: 0; padding-top: 0; padding-bottom: 6rem; }
+.about-header { min-height: calc(100svh - 4.3rem); max-width: none; margin-bottom: clamp(5rem, 10vw, 9rem); }
+.about-header h1 { margin: 1rem 0 2rem; font-size: clamp(3rem, 7vw, 7rem); font-weight: 500; letter-spacing: -.08em; line-height: .94; }
 .about-lede { max-width: 570px; margin: 0; color: var(--text-muted); font-size: 1.1rem; line-height: 1.75; }
 .about-copy { max-width: 680px; color: var(--text-muted); font-size: .98rem; line-height: 1.75; }
 .about-layout { display: grid; grid-template-columns: 190px 1fr; gap: clamp(2rem, 8vw, 9rem); }
@@ -12,12 +12,18 @@
 .block-number { margin: .4rem 0 1rem; padding-bottom: .75rem; border-bottom: 1px solid var(--border-color); color: var(--accent-color); font: .7rem var(--font-mono); scroll-margin-top: 7rem; }
 .about-block h2 { margin-bottom: 2rem; font-size: clamp(2rem, 4vw, 3.7rem); font-weight: 500; }
 .timeline-item { padding: 0 0 2rem 1.2rem; border-left: 1px solid var(--border-color); }
+.timeline-heading { display: flex; align-items: center; gap: 1rem; }
+.timeline-logo { flex: 0 0 auto; width: 64px; height: 64px; padding: .45rem; overflow: hidden; border: 1px solid var(--border-color); background: var(--surface); }
+.timeline-entry-copy { min-width: 0; }
 .timeline-date, .community-list span { margin-bottom: .7rem; color: var(--accent-color); font: .68rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
 .timeline-item h3, .community-list h3 { margin: 0 0 .35rem; font-size: 1.2rem; }
 .role { margin: 0 0 .7rem; color: var(--text-primary) !important; }
 .timeline-item p, .community-list p, .feature-note span, .two-column p { color: var(--text-muted); font-size: .93rem; line-height: 1.7; }
 .feature-note { display: flex; flex-direction: column; gap: .5rem; padding: 1.25rem 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
 .feature-note strong { font-size: 1.15rem; }
+.education-entry { display: flex; align-items: center; gap: 1.5rem; }
+.education-entry .feature-note { flex: 1; }
+.education-logo { flex: 0 0 auto; width: 80px; height: 80px; padding: .6rem; overflow: hidden; border: 1px solid var(--border-color); background: var(--surface); }
 .community-list { display: grid; gap: 1.5rem; }
 .community-list article { padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); }
 .community-list p { margin: .75rem 0 0; }
@@ -29,6 +35,8 @@
 .courses { margin-top: 2rem; }
 .courses h3 { color: var(--text-primary); font-size: .85rem; letter-spacing: .08em; text-transform: uppercase; }
 @media (max-width: 700px) {
+  .about-header { min-height: 0; }
+  .about { padding-top: 2rem; }
   .about-layout { grid-template-columns: 1fr; }
   .about-index { top: 4.2rem; flex-direction: row; gap: 1rem; margin-inline: -1rem; padding: .8rem 1rem; overflow-x: auto; transform: none; background: var(--bg-primary); border-bottom: 1px solid var(--border-color); white-space: nowrap; }
   .about-index span { flex: 0 0 auto; margin: 0; }
@@ -67,9 +75,11 @@
 .about-hobby-item[open] .about-hobby-toggle { transform: rotate(45deg); }
 .about-hobby-content { display: grid; grid-template-columns: minmax(0, 1fr) minmax(180px, .7fr); align-items: start; gap: 1.5rem; padding: 0 0 1.5rem; }
 .about-hobby-content p { margin: 0; color: var(--text-muted); line-height: 1.75; }
-.about-hobby-content img { width: 100%; max-height: 320px; border: 1px solid var(--border-color); object-fit: cover; }
 
 @media (max-width: 600px) {
+  .timeline-logo { width: 52px; height: 52px; padding: .35rem; }
+  .education-entry { gap: 1rem; }
+  .education-logo { width: 60px; height: 60px; padding: .45rem; }
   .about-highlights { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .about-highlights > p { grid-column: 1 / -1; max-width: none; margin-top: .6rem; }
   .about-highlight span { font-size: .57rem; }

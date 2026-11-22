@@ -1,35 +1,9 @@
 <div class="admin-page page-shell">
   <header><p class="eyebrow"><span class="eyebrow-line"></span> Restricted area</p><h1>Content<br /><em>control room.</em></h1><p>Manage portfolio data, upload files to your configured Google Drive folder, and keep private diary entries in Firebase. This page is hidden from non-administrators and protected by Firestore rules.</p></header>
   <p *ngIf="message" class="admin-message">{{ message }}</p><p *ngIf="error" class="admin-error">{{ error }}</p>
-  <section class="admin-layout">
-    <div class="management-panel">
-      <div class="panel-heading">
-        <h2>Projects</h2>
-        <span>{{ projects.length }} records · {{ projectsSource }}</span>
-      </div>
-      <button *ngIf="projects.length === 0" class="save-button" type="button" (click)="publishStarterProjects()">Publish starter projects to Firebase</button>
-      <div class="managed-item" *ngFor="let project of projects">
-        <div><strong>{{ project.title }}</strong><span>{{ project.year }} · {{ project.type }}</span></div>
-        <div><button type="button" (click)="edit(project)">Edit</button><button type="button" class="danger" (click)="remove(project)">Remove</button></div>
-      </div>
-    </div>
-    <div class="editor-panel" *ngIf="selected as project">
-      <div class="panel-heading"><h2>Edit project</h2><button type="button" (click)="selected = null">Close</button></div>
-      <label>Title<input [(ngModel)]="project.title" /></label>
-      <label>Year<input [(ngModel)]="project.year" /></label>
-      <label>Project type<input [(ngModel)]="project.type" /></label>
-      <label>Summary<textarea [(ngModel)]="project.summary" rows="3"></textarea></label>
-      <label>Details<textarea [(ngModel)]="project.details" rows="4"></textarea></label>
-      <label>Technologies (one per line)<textarea [(ngModel)]="technologiesText" rows="4"></textarea></label>
-      <label>GitHub URL<input [(ngModel)]="project.githubUrl" /></label>
-      <label>Accent color<input [(ngModel)]="project.accent" /></label>
-      <label class="checkbox-label"><input type="checkbox" [(ngModel)]="project.featured" /> Show on About page</label>
-      <button type="button" class="save-button" (click)="save()">Save project to Firestore ↗</button>
-    </div>
-  </section>
   <section class="admin-section">
     <div class="panel-heading"><h2>About page copy</h2><span>Publicly readable · editable here</span></div>
-    <p class="admin-muted">This copy is shown on the public About page. Entries separated with pipes or new lines use the formats shown in their labels. Add expandable hobbies one per line as title|description|photo URL; the photo URL is optional. To add a photo, upload it in Files with “Anyone with the link” enabled, copy its Open in Drive link, and paste it into the matching photo field or hobby entry. Drive viewer links are converted automatically for image display.</p>
+    <p class="admin-muted">This copy is shown on the public About page. Entries separated with pipes or new lines use the formats shown in their labels. Add work experience logos as the fifth field on an entry (date|company|role|description|logo URL); leave it blank when an entry has no logo. Add expandable hobbies one per line as title|description|photo URL; the photo URL is optional. To add a photo or logo, upload it in Files with “Anyone with the link” enabled, copy its Open in Drive link, and paste it into the matching photo field, hobby entry, work experience entry, or education logo field. Drive viewer links are converted automatically for image display.</p>
     <div *ngFor="let section of aboutContentSections" class="copy-editor-section">
       <h3>{{ section.title }}</h3>
       <div class="copy-editor-grid">
@@ -71,5 +45,11 @@
     <div class="managed-item" *ngFor="let entry of diaryEntries"><div><strong>{{ entry.title || 'Untitled entry' }}</strong><span>Updated {{ entry.updatedAt | date:'medium' }}</span></div><div><button type="button" (click)="editDiary(entry)">Edit</button><button type="button" class="danger" (click)="removeDiary(entry)">Remove</button></div></div>
     <p class="admin-muted" *ngIf="diaryEntries.length === 0">No private diary entries yet.</p>
     <div class="editor-panel" *ngIf="selectedDiary as entry"><div class="panel-heading"><h2>Edit diary entry</h2><button type="button" (click)="selectedDiary = null">Close</button></div><label>Title<input [(ngModel)]="entry.title" /></label><label>Entry<textarea [(ngModel)]="entry.body" rows="10"></textarea></label><button type="button" class="save-button" (click)="saveDiary()">Save private entry ↗</button></div>
+  </section>
+  <section class="admin-section">
+    <div class="panel-heading"><h2>Hobbies</h2><button type="button" (click)="newHobby()">New entry</button></div>
+    <div class="managed-item" *ngFor="let entry of hobbies"><div><strong>{{ entry.title || 'Untitled entry' }}</strong><span>Updated {{ entry.updatedAt | date:'medium' }}</span></div><div><button type="button" (click)="editHobby(entry)">Edit</button><button type="button" class="danger" (click)="removeHobby(entry)">Remove</button></div></div>
+    <p class="admin-muted" *ngIf="hobbies.length === 0">No hobby entries yet.</p>
+    <div class="editor-panel" *ngIf="selectedHobby as entry"><div class="panel-heading"><h2>{{ isNewHobbyEntry ? 'New hobby entry' : 'Edit hobby entry' }}</h2><button type="button" (click)="selectedHobby = null">Close</button></div><label>Title<input [(ngModel)]="entry.title" /></label><label>Description<textarea [(ngModel)]="entry.description" rows="4"></textarea></label><label>Photo URL<input [(ngModel)]="entry.photoUrl" placeholder="Drive link or URL" /></label><p class="admin-muted">The photo is fetched from the link and previewed here.</p><div class="hobby-photo"><app-drive-image [src]="entry.photoUrl" [alt]="entry.title" [placeholder]="'Add a Drive link to see the photo.'" /></div><div class="editor-actions"><button type="button" class="save-button" (click)="saveHobby()">Save hobby entry ↗</button><button type="button" class="save-button add-another" (click)="saveAndAddHobby()">Save and add another ↗</button></div></div>
   </section>
 </div>
