@@ -48,7 +48,10 @@ export interface AboutPageContent {
   educationDetails: string;
   educationLogoUrl: string;
   experienceHeading: string;
+  /** Legacy pipe-separated work experience data. Kept for backward compatibility. */
   experienceEntries: string;
+  /** Structured work experience entries as a JSON string. Preferred over experienceEntries when present. */
+  experienceItemsJson: string;
   communityHeading: string;
   communityEntries: string;
   toolkitHeading: string;
@@ -116,4 +119,12 @@ export interface HobbyEntry {
   photoUrl: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface WorkExperienceEntry {
+  date: string;
+  company: string;
+  role: string;
+  bullets: string[];
+  logoUrl: string;
 }

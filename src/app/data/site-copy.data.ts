@@ -40,7 +40,8 @@ export const DEFAULT_ABOUT_CONTENT: AboutPageContent = {
   educationDetails: 'GPA: 3.7 / 4.5 · Four years',
   educationLogoUrl: '',
   experienceHeading: 'Work experience',
-  experienceEntries: 'May 2024 — Present|Micron Technology, Inc.|Software Development Engineer · Taoyuan, Taiwan|Develop and deliver high quality, maintainable programs across UI, API, and database areas.\nApr 2023 — Jun 2023|National Dong Hwa University · Taiwan|Introduction to Computer Programming II · Teaching Assistant|Assisted students with programming assignments by teaching the basics of coding and the logic behind the assignments.',
+  experienceEntries: 'May 2024 — Present|Micron Technology, Inc.|Software Development Engineer · Taoyuan, Taiwan|- Built and maintained C#/.NET applications used in manufacturing operations.\n- Developed and maintained web applications using AngularJS, integrated with backend services and SQL databases.\n- Worked on backend services, SQL databases and scheduled jobs.\n- Fixed bugs related to data processing, concurrency and application state.\n- Wrote automated tests and test cases for new features and bug fixes.\n- Investigated issues across applications and databases and worked with other engineers to resolve them.\n- Supported code reviews, testing and software releases.|https://drive.google.com/file/d/1KwQTx1b4GiKcoz44pJxywB0sc0D7r_lN/view?usp=drive_link\nApr 2023 — Jun 2023|National Dong Hwa University · Taiwan|Teaching Assistant|Assisted students with programming assignments by teaching the basics of coding and the logic behind the assignments.|https://drive.google.com/file/d/1RIdnHnpCPvHp9g4hb12Qk_2aA0-FnlhV/view?usp=drive_link',
+  experienceItemsJson: '',
   communityHeading: 'Organisational & volunteer experience',
   communityEntries: 'PPI NDHU — Indonesian Students Association|Jun 2022 — Jun 2023 · External Human Resources|Assisted new Indonesian students arriving in Taiwan with registration and welcoming events, and handled public relations for NDHU International Culture Night 2022.\nPPI NDHU — Indonesian Students Association|Sep 2021 — Jun 2022 · Internal Human Resources|Maintained relationships between members, organised events and team activities, and established farewells for graduating students.\nNDHU Volunteer|Apr 2020 — Sep 2020 · International student support|Helped new international students with questions, registration forms, dormitory move-in, translations, and orientation.',
   toolkitHeading: 'Skills & courses',
@@ -112,7 +113,6 @@ export const ABOUT_CONTENT_SECTIONS = [
     title: 'Work experience',
     fields: [
       { key: 'experienceHeading', label: 'Experience heading' },
-      { key: 'experienceEntries', label: 'Entries (date|company|role|description|logo URL per line)', multiline: true },
     ],
   },
   {

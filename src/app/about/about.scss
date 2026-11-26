@@ -19,6 +19,9 @@
 .timeline-item h3, .community-list h3 { margin: 0 0 .35rem; font-size: 1.2rem; }
 .role { margin: 0 0 .7rem; color: var(--text-primary) !important; }
 .timeline-item p, .community-list p, .feature-note span, .two-column p { color: var(--text-muted); font-size: .93rem; line-height: 1.7; }
+.bullet-list { display: grid; gap: .35rem; margin: .35rem 0 0; padding-left: 1.15rem; color: var(--text-muted); font-size: .93rem; line-height: 1.7; }
+.bullet-list li { padding-left: .1rem; }
+.bullet-list li::marker { color: var(--accent-color); }
 .feature-note { display: flex; flex-direction: column; gap: .5rem; padding: 1.25rem 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
 .feature-note strong { font-size: 1.15rem; }
 .education-entry { display: flex; align-items: center; gap: 1.5rem; }

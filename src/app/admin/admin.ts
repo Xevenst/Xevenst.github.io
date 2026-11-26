@@ -4,8 +4,23 @@ import { FormsModule } from '@angular/forms';
 import { ContentService } from '../services/content.service';
 import { DatabaseService } from '../services/database.service';
 import { DEFAULT_ABOUT_CONTENT, DEFAULT_PORTFOLIO_CONTENT, ABOUT_CONTENT_SECTIONS, PORTFOLIO_CONTENT_FIELDS } from '../data/site-copy.data';
+import {
+  joinBulletText,
+  parseLegacyWorkExperience,
+  parseStructuredWorkExperience,
+  serializeWorkExperience,
+  splitBulletText,
+} from '../data/work-experience';
 import { AboutPageContent, DiaryEntry, HobbyEntry, PortfolioPageContent, StoredFile } from '../models/portfolio.models';
 import { DriveImageComponent } from '../shared/drive-image/drive-image';
+
+interface ExperienceEditorRow {
+  date: string;
+  company: string;
+  role: string;
+  logoUrl: string;
+  bulletsText: string;
+}
 
 @Component({
   selector: 'app-admin',
@@ -21,6 +36,7 @@ export class AdminComponent {
   isNewHobbyEntry = false;
   aboutContent: AboutPageContent = { ...DEFAULT_ABOUT_CONTENT };
   portfolioContent: PortfolioPageContent = { ...DEFAULT_PORTFOLIO_CONTENT };
+  experienceEditor: ExperienceEditorRow[] = [];
   readonly aboutContentSections = ABOUT_CONTENT_SECTIONS.map((section) => ({
     ...section,
     fields: section.fields.map((field) => ({
@@ -72,6 +88,8 @@ export class AdminComponent {
       if (results[3].status === 'fulfilled') this.aboutContent = results[3].value;
       if (results[4].status === 'fulfilled') this.portfolioContent = results[4].value;
 
+      this.syncExperienceEditor();
+
       const failures = results
         .filter((result): result is PromiseRejectedResult => result.status === 'rejected')
         .map(({ reason }) => reason instanceof Error ? reason.message : 'Some admin content could not be loaded.');
@@ -83,6 +101,7 @@ export class AdminComponent {
 
   async saveAboutContent(): Promise<void> {
     try {
+      this.commitExperienceEditor();
       await this.database.saveAboutContent(this.aboutContent);
       this.message = 'About page copy saved to Firestore.';
       this.error = null;
@@ -91,6 +110,59 @@ export class AdminComponent {
     } finally {
       this.changeDetector.markForCheck();
     }
+  }
+
+  addExperience(): void {
+    this.experienceEditor.push({ date: '', company: '', role: '', logoUrl: '', bulletsText: '' });
+    this.changeDetector.markForCheck();
+  }
+
+  removeExperience(index: number): void {
+    this.experienceEditor.splice(index, 1);
+    if (!this.experienceEditor.length) this.addExperience();
+    this.changeDetector.markForCheck();
+  }
+
+  moveExperience(index: number, direction: -1 | 1): void {
+    const target = index + direction;
+    if (target < 0 || target >= this.experienceEditor.length) return;
+    const [row] = this.experienceEditor.splice(index, 1);
+    this.experienceEditor.splice(target, 0, row);
+    this.changeDetector.markForCheck();
+  }
+
+  private syncExperienceEditor(): void {
+    const structured = parseStructuredWorkExperience(this.aboutContent.experienceItemsJson);
+    const entries = structured.length
+      ? structured
+      : parseLegacyWorkExperience(this.aboutContent.experienceEntries);
+
+    this.experienceEditor = entries.map((entry) => ({
+      date: entry.date,
+      company: entry.company,
+      role: entry.role,
+      logoUrl: entry.logoUrl,
+      bulletsText: joinBulletText(entry.bullets),
+    }));
+
+    if (!this.experienceEditor.length) {
+      this.experienceEditor = [{ date: '', company: '', role: '', logoUrl: '', bulletsText: '' }];
+    }
+  }
+
+  private commitExperienceEditor(): void {
+    const entries = this.experienceEditor.map((row) => ({
+      date: row.date,
+      company: row.company,
+      role: row.role,
+      logoUrl: row.logoUrl,
+      bullets: splitBulletText(row.bulletsText),
+    }));
+
+    this.aboutContent.experienceItemsJson = serializeWorkExperience(entries);
+    // The structured JSON is now the source of truth; clear the legacy field so it cannot
+    // resurface stale text if structured data is ever emptied.
+    this.aboutContent.experienceEntries = '';
   }
 
   async savePortfolioContent(): Promise<void> {

@@ -3,7 +3,7 @@
   <p *ngIf="message" class="admin-message">{{ message }}</p><p *ngIf="error" class="admin-error">{{ error }}</p>
   <section class="admin-section">
     <div class="panel-heading"><h2>About page copy</h2><span>Publicly readable · editable here</span></div>
-    <p class="admin-muted">This copy is shown on the public About page. Entries separated with pipes or new lines use the formats shown in their labels. Add work experience logos as the fifth field on an entry (date|company|role|description|logo URL); leave it blank when an entry has no logo. Add expandable hobbies one per line as title|description|photo URL; the photo URL is optional. To add a photo or logo, upload it in Files with “Anyone with the link” enabled, copy its Open in Drive link, and paste it into the matching photo field, hobby entry, work experience entry, or education logo field. Drive viewer links are converted automatically for image display.</p>
+    <p class="admin-muted">This copy is shown on the public About page. Add work experience in the structured editor below: each entry appears in the timeline, and every line in its description becomes a bullet point. Add expandable hobbies one per line as title|description|photo URL; the photo URL is optional. To add a photo or logo, upload it in Files with “Anyone with the link” enabled, copy its Open in Drive link, and paste it into the matching photo field, hobby entry, work experience logo field, or education logo field. Drive viewer links are converted automatically for image display.</p>
     <div *ngFor="let section of aboutContentSections" class="copy-editor-section">
       <h3>{{ section.title }}</h3>
       <div class="copy-editor-grid">
@@ -14,6 +14,30 @@
           </label>
         </ng-container>
       </div>
+    </div>
+    <div class="copy-editor-section">
+      <h3>Work experience entries</h3>
+      <p class="admin-muted">Add one bullet point per line in “Description”. Lines appear as a bulleted list on the About page.</p>
+      <div class="experience-editor" *ngFor="let entry of experienceEditor; let i = index">
+        <div class="experience-editor-heading">
+          <strong>{{ entry.company || 'New work experience' }}</strong>
+          <div class="editor-actions">
+            <button type="button" (click)="moveExperience(i, -1)" [disabled]="i === 0">Move up</button>
+            <button type="button" (click)="moveExperience(i, 1)" [disabled]="i === experienceEditor.length - 1">Move down</button>
+            <button type="button" class="danger" (click)="removeExperience(i)">Remove</button>
+          </div>
+        </div>
+        <div class="copy-editor-grid">
+          <label>Date<input [(ngModel)]="entry.date" placeholder="May 2024 — Present" /></label>
+          <label>Company<input [(ngModel)]="entry.company" /></label>
+          <label>Role<input [(ngModel)]="entry.role" /></label>
+          <label>Logo URL<input [(ngModel)]="entry.logoUrl" placeholder="Drive link or URL" /></label>
+        </div>
+        <label>Description (one bullet per line)
+          <textarea [(ngModel)]="entry.bulletsText" rows="5" placeholder="Built and maintained C#/.NET applications.&#10;Developed AngularJS front ends."></textarea>
+        </label>
+      </div>
+      <button type="button" class="experience-editor-add" (click)="addExperience()">Add work experience</button>
     </div>
     <button type="button" class="save-button" (click)="saveAboutContent()">Save About copy to Firestore</button>
   </section>

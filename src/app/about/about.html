@@ -90,7 +90,9 @@
                 <p class="role">{{ item.role }}</p>
               </div>
             </div>
-            <p class="preserve-line-breaks">{{ item.description }}</p>
+            <ul class="bullet-list" *ngIf="item.bullets.length">
+              <li *ngFor="let bullet of item.bullets">{{ bullet }}</li>
+            </ul>
           </article>
         </div>
       </section>

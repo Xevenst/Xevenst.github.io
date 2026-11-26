@@ -1,5 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject, PLATFORM_ID } from '@angular/core';
+import {
+  ChangeDetectorRef, Component, Inject, PLATFORM_ID,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import {
@@ -7,7 +9,11 @@ import {
   LEGACY_DEFAULT_ABOUT_SKILLS,
   PREVIOUS_DEFAULT_ABOUT_SKILLS,
 } from '../data/site-copy.data';
-import { AboutPageContent, HobbyEntry, PortfolioProject } from '../models/portfolio.models';
+import {
+  parseLegacyWorkExperience,
+  parseStructuredWorkExperience,
+} from '../data/work-experience';
+import { AboutPageContent, HobbyEntry, PortfolioProject, WorkExperienceEntry } from '../models/portfolio.models';
 import { DatabaseService } from '../services/database.service';
 import { GitHubProjectsService, selectPinnedPublicProjects } from '../services/github-projects.service';
 import { DriveImageComponent } from '../shared/drive-image/drive-image';
@@ -146,11 +152,10 @@ export class AboutComponent {
     ];
   }
 
-  get experienceItems(): { date: string; company: string; role: string; description: string; logoUrl: string }[] {
-    return this.content.experienceEntries.split(/\r?\n/)
-      .map((row) => row.split('|').map((field) => field.trim()))
-      .filter((fields) => (fields.length === 4 || fields.length === 5) && fields.slice(0, 4).every(Boolean))
-      .map(([date, company, role, description, logoUrl = '']) => ({ date, company, role, description, logoUrl }));
+  get experienceItems(): WorkExperienceEntry[] {
+    const structured = parseStructuredWorkExperience(this.content.experienceItemsJson);
+    if (structured.length) return structured;
+    return parseLegacyWorkExperience(this.content.experienceEntries);
   }
 
   get communityItems(): { title: string; date: string; description: string }[] {

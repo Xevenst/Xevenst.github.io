@@ -155,6 +155,40 @@ describe('AboutComponent', () => {
     expect(items[1].querySelector('.timeline-logo')).toBeNull();
   });
 
+  it('separates a fifth-field logo from multi-line legacy bullets', async () => {
+    database.getAboutContent.and.rejectWith(new Error('offline'));
+    window.localStorage.setItem('xevenst-about-content-v1', JSON.stringify({
+      ...DEFAULT_ABOUT_CONTENT,
+      experienceEntries: [
+        'May 2024 — Present|Micron Technology, Inc.|Software Development Engineer · Taoyuan, Taiwan|- Built and maintained C#/.NET applications.|https://drive.google.com/file/d/logo789/view?usp=drive_link',
+        '- Developed and maintained web applications using AngularJS.',
+        '- Worked on backend services, SQL databases and scheduled jobs.',
+        'Apr 2023 — Jun 2023|National Dong Hwa University · Taiwan|Teaching Assistant|Assisted students with programming assignments.|https://drive.google.com/file/d/school789/view?usp=drive_link',
+      ].join('\n'),
+    }));
+
+    const revisit = TestBed.createComponent(AboutComponent);
+    revisit.detectChanges();
+    await revisit.whenStable();
+
+    const items = revisit.nativeElement.querySelectorAll('.timeline-item') as NodeListOf<HTMLElement>;
+    expect(items.length).toBe(2);
+
+    const micronBullets = items[0].querySelectorAll('.bullet-list li') as NodeListOf<HTMLElement>;
+    expect(micronBullets.length).toBe(3);
+    expect(micronBullets[0].textContent).toContain('Built and maintained C#/.NET applications.');
+    expect(micronBullets[2].textContent).toContain('Worked on backend services');
+    // The logo URL must not leak into the bullets.
+    expect(items[0].textContent).not.toContain('drive.google.com');
+    expect(items[0].querySelector('.timeline-logo img')?.getAttribute('src'))
+      .toBe('https://lh3.googleusercontent.com/d/logo789=w1600');
+
+    const ndhuBullets = items[1].querySelectorAll('.bullet-list li') as NodeListOf<HTMLElement>;
+    expect(ndhuBullets.length).toBe(1);
+    expect(items[1].querySelector('.timeline-logo img')?.getAttribute('src'))
+      .toBe('https://lh3.googleusercontent.com/d/school789=w1600');
+  });
+
   it('renders the education logo from a Google Drive link', async () => {
     database.getAboutContent.and.rejectWith(new Error('offline'));
     window.localStorage.setItem('xevenst-about-content-v1', JSON.stringify({
@@ -168,6 +202,55 @@ describe('AboutComponent', () => {
 
     expect(revisit.nativeElement.querySelector('.education-logo img')?.getAttribute('src'))
       .toBe('https://lh3.googleusercontent.com/d/school456=w1600');
+  });
+
+  it('renders structured work experience descriptions as a bulleted list', async () => {
+    database.getAboutContent.and.rejectWith(new Error('offline'));
+    window.localStorage.setItem('xevenst-about-content-v1', JSON.stringify({
+      ...DEFAULT_ABOUT_CONTENT,
+      experienceItemsJson: JSON.stringify([
+        {
+          date: 'May 2024 — Present',
+          company: 'Micron Technology, Inc.',
+          role: 'Software Development Engineer',
+          bullets: ['Built and maintained C#/.NET applications.', 'Developed AngularJS front ends.'],
+          logoUrl: '',
+        },
+      ]),
+    }));
+
+    const revisit = TestBed.createComponent(AboutComponent);
+    revisit.detectChanges();
+    await revisit.whenStable();
+
+    const items = revisit.nativeElement.querySelectorAll('.timeline-item') as NodeListOf<HTMLElement>;
+    expect(items.length).toBe(1);
+    const bullets = items[0].querySelectorAll('.bullet-list li') as NodeListOf<HTMLElement>;
+    expect(bullets.length).toBe(2);
+    expect(bullets[0].textContent).toContain('Built and maintained C#/.NET applications.');
+    expect(bullets[1].textContent).toContain('Developed AngularJS front ends.');
+  });
+
+  it('parses legacy work experience descriptions that wrap across lines', async () => {
+    database.getAboutContent.and.rejectWith(new Error('offline'));
+    window.localStorage.setItem('xevenst-about-content-v1', JSON.stringify({
+      ...DEFAULT_ABOUT_CONTENT,
+      experienceEntries: 'May 2024 — Present|Micron|Engineer|- Built apps.\n- Maintained APIs.\nApr 2023 — Jun 2023|NDHU|Teaching Assistant|Assisted students.',
+    }));
+
+    const revisit = TestBed.createComponent(AboutComponent);
+    revisit.detectChanges();
+    await revisit.whenStable();
+
+    const items = revisit.nativeElement.querySelectorAll('.timeline-item') as NodeListOf<HTMLElement>;
+    expect(items.length).toBe(2);
+    const firstBullets = items[0].querySelectorAll('.bullet-list li') as NodeListOf<HTMLElement>;
+    expect(firstBullets.length).toBe(2);
+    expect(firstBullets[0].textContent).toContain('Built apps.');
+    expect(firstBullets[1].textContent).toContain('Maintained APIs.');
+    const secondBullets = items[1].querySelectorAll('.bullet-list li') as NodeListOf<HTMLElement>;
+    expect(secondBullets.length).toBe(1);
+    expect(secondBullets[0].textContent).toContain('Assisted students.');
   });
 
   it('renders each hobby as a separate expandable entry', async () => {
